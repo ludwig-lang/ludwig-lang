@@ -1,0 +1,21 @@
+{
+  "name": "ludwig-lang",
+  "version": "0.1.5",
+  "description": "The Ludwig Programming Language",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name" : "Pavel Mikhailovskii",
+    "email" : "pavel.mikhailovskii@gmail.com",
+    "url" : "https://github.com/strangepleasures"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "browserify": "^17.0.0",
+    "immutable": "^4.0.0-rc.12",
+    "sync-rpc": "^1.3.6"
+  }
+}

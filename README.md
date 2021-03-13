@@ -1,2 +1,1 @@
-# ludwig-lang
-The Ludwig Programming Language
+# The Ludwig Programming Language

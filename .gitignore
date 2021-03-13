@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+package-lock.json
+ludwig-lang.iml
+.idea/
+node_modules/
