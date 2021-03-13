@@ -1,6 +1,7 @@
 const rt = require('./rt')
 const immutable = require('immutable')
 const tailcall = require('./tailcall')
+const {isBrowser} = require('browser-or-node')
 
 function number(x) {
     if(typeof x == 'number') {
@@ -129,9 +130,14 @@ const builtins = {
     },
     'arity': f => f.length,
     'prompt': question => {
-        const forceSync = require('sync-rpc')
-        const syncPrompt = forceSync(require.resolve('./prompt'))
-        return syncPrompt(question)
+        if (isBrowser) {
+            const answer = prompt(question)
+            this.println(question + answer)
+        } else {
+            const forceSync = require('sync-rpc')
+            const syncPrompt = forceSync(require.resolve('./prompt'))
+            return syncPrompt(question)
+        }
     }
 }
 builtins.__proto__ = null

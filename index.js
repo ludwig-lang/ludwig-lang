@@ -2,6 +2,7 @@ const rt = require('./rt')
 const builtins = require('./builtins')
 const stdlib = require('./stdlib')
 const tailcall = require('./tailcall')
+const {isNode} = require('browser-or-node')
 
 class LudwigError extends Error {
     constructor(file, line, column, message, cause) {
@@ -164,10 +165,6 @@ function expect(token, filename, pos, tokens) {
         error(filename, tokens[pos].line, tokens[pos].column, `Expected '${token}'`)
     }
 }
-
-const isNode = typeof process !== 'undefined'
-    && process.versions != null
-    && process.versions.node != null;
 
 const ludwig = {
     loaded: new Map(),
