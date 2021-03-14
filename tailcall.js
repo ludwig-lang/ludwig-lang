@@ -1,6 +1,10 @@
+function args(length) {
+    return Array.from({length}, (_, i) => `_${i}` )
+}
+
 class TailCallable extends Function {
     constructor(argCount, tc) {
-        super(...Array(argCount).map(i => `_${i}`), 'return this.__self__.__call__(arguments)')
+        super(...args(argCount), `return this.__self__.__call__([${args(argCount)}])`)
         const self = this.bind(this)
         this.__self__ = self
         self.__tail_call__ = tc
