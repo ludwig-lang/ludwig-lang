@@ -62,7 +62,7 @@ function parseExpression(tokens, pos, filename) {
             }
             const lhs = tokens[pos].value
             if (lhs.startsWith('`') || lhs === '=' || lhs === '\\' || lhs === '[' || lhs === ']') {
-                error(filename, tokens[pos].line, tokens[pos].column, 'Expected a symbol  x')
+                error(filename, tokens[pos].line, tokens[pos].column, 'Expected a symbol')
             }
             if (pos === tokens.length - 1) {
                 error(filename, tokens[pos].line, tokens[pos].column, 'Expected an expression')
@@ -149,7 +149,7 @@ function parseExpression(tokens, pos, filename) {
     // symbol
     const symbol = t.value
     if (symbol === ']' || symbol === '=' || symbol === '\\') {
-        error(filename, tokens[pos].line, tokens[pos].column, `Expected a '[' before '${symbol}'`)
+        error(filename, tokens[pos].line, tokens[pos].column, `Unexpected '${symbol}'`)
     }
     return [pos + 1, env => {
         const v = env[symbol]
