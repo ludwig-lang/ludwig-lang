@@ -131,8 +131,7 @@ const builtins = {
     'arity': f => f.length,
     'prompt': question => {
         if (isBrowser) {
-            const answer = prompt(question)
-            this.println(question + answer)
+            return  prompt(question)
         } else {
             const forceSync = require('sync-rpc')
             const syncPrompt = forceSync(require.resolve('./prompt'))
