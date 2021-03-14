@@ -104,6 +104,9 @@ function parseExpression(tokens, pos, filename) {
             expect(']', filename, newpos++, tokens)
             const factory = env => tailcall(args.length, (params) => {
                 const e = Object.create(env)
+                if (args.length !== params.length) {
+                    throw Error(`Expected ${args.length} arguments, got ${params.length}`)
+                }
                 for (let i = 0; i < args.length; i++) {
                     e[args[i]] = params[i]
                 }
