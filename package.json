@@ -1,12 +1,13 @@
 {
   "name": "ludwig-lang",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "The Ludwig Programming Language",
+  "homepage": "hhttps://github.com/ludwig-lang/ludwig-lang",
+  "keywords": ["programming language", "interpreter", "lisp"],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": {
     "name": "Pavel Mikhailovskii",
     "email": "pavel.mikhailovskii@gmail.com",
