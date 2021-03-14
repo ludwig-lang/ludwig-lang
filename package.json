@@ -1,6 +1,6 @@
 {
   "name": "ludwig-lang",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "The Ludwig Programming Language",
   "homepage": "hhttps://github.com/ludwig-lang/ludwig-lang",
   "keywords": ["programming language", "interpreter", "lisp"],
