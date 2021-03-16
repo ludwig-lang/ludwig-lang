@@ -40,5 +40,5 @@ annoying and distracting. With its extremely simple and regular (even comparing 
 candidate for experiments with non-textual structural or projectional editing approaches. 
 
 ```
-[println `Hello world`]
+[println `Hello, World`]
 ```
