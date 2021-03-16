@@ -36,11 +36,11 @@ function LudwigSnippet(props) {
                                         text.style.height = adjustedHeight + "px";
                                 }
                             }}
-                            onInput={e => {
+                            onKeyPress={e => {
                                 const pos = e.target.selectionStart;
                                 const val = [...e.target.value];
 
-                                const char = val.slice(pos - 1, pos)[0];
+                                const char = e.key;
                                 const closeChar = closeChars.get(char);
 
                                 if (closeChar) {
@@ -53,18 +53,19 @@ function LudwigSnippet(props) {
     />
 
     const output = results && <textarea readOnly
-                                   rows={results.match(/[^\r\n]+/g).length + 1}
+                                   rows={Math.min(results.match(/[^\r\n]+/g).length + 1, 20)}
                                    cols="80"
                                    style={{fontFamily: 'Monospace', resize: 'none', width: '100%', 'background-color': 'black', color: 'white'}}
                                    value={results}/>
-
-
 
     function execute() {
         let output = ''
         const env = ludwig.env()
         env.println = x => {
             output += `${x}\n`
+        }
+        env.print = x => {
+            output += x + ''
         }
         setResults('')
         setError('')

@@ -190,7 +190,51 @@ Chained if:
 ```
 
 ### Generators
+Ludwig's approach to iterables, generators, sequences, collections or how you name them is different from other programming languages.
+A generator is simply a function which takes another single-argument function as an argument.
+We call the second function *consumer*.
+The generator may call the consumer an arbitrary (finite or infinite) number of times, feeding the consumer with values
+(yielding values).
 
+
+A generator that yields three values:
+```
+[= generator [\[consumer]
+  [consumer zero]
+  [consumer one]
+  [consumer two]
+]]
+
+# We pass println as a consumer
+[generator println]
+```
+
+
+A generator that yields 20 values:
+```
+[= generator [\[consumer]
+  [= i [var zero]]
+  [= iter [\ []
+    [println [get i]]
+    [if [< [++ i] [num `20`]]
+      iter
+      [\[]]
+    ]
+  ]]
+  [iter]
+]]
+
+[generator println]
+```
+
+A generator that yields nothing:
+```
+[= generator [\[consumer]
+]]
+
+# Will print nothing
+[generator println]
+```
 ### Lists
 ```
 [= items [, `a` `b` `c`]]
@@ -204,3 +248,18 @@ Chained if:
 
 ### Sets
 
+
+### Records
+
+### Lazy evaluation
+
+```
+[= instance [lazy [\[]
+[println `Calculating...`]
+`A result of a very expensive calulation`
+]]]
+
+# Prints "Calculating..." only once
+[println [value]]
+[println [value]]
+```
