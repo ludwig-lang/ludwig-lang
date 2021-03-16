@@ -1,4 +1,4 @@
-const rt = require('./rt')
+const Result = require('./result')
 const builtins = require('./builtins')
 const stdlib = require('./stdlib')
 const tailcall = require('./tailcall')
@@ -113,7 +113,7 @@ function parseExpression(tokens, pos, filename) {
 
                 for (let i = 0; i < body.length - 1; i++) {
                     let result = body[i](e)
-                    if (result instanceof rt.Result) {
+                    if (result instanceof Result) {
                         return result
                     }
                 }

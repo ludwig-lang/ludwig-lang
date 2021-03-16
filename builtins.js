@@ -1,10 +1,10 @@
-const rt = require('./rt')
+const Result = require('./result')
 const immutable = require('immutable')
 const tailcall = require('./tailcall')
 const {isBrowser} = require('browser-or-node')
 
 function number(x) {
-    if(typeof x == 'number') {
+    if (typeof x == 'number') {
         return x
     }
     throw Error('Expected a number')
@@ -28,17 +28,7 @@ const builtins = {
         }
         return result
     },
-    ',': (...args) => {
-        const il = immutable.List(args)
-        const result = c => {
-            const r = il.forEach(c)
-            if (r instanceof rt.Result) {
-                return r
-            }
-        }
-        result[rt.LIST] = il
-        return result
-    },
+    ',': (...args) => builtins.list(c => args.forEach(c)),
     'println': x => console.log(x) & null,
     'var': x => {
         const get = () => x
@@ -62,18 +52,18 @@ const builtins = {
     'length': s => s.length,
     'substring': (s, from, length) => s.substr(from, length),
     'record': gen => {
-        const m =  new Map()
+        let m = immutable.OrderedMap()
         let isKey = true
         let key
         gen(x => {
             if (isKey) {
                 key = x
             } else {
-                m.set(key, x)
+                m = m.set(key, x)
             }
             isKey = !isKey
         })
-        return k => {
+        const result = k => {
             const v = m.get(k)
             if (v === undefined) {
                 if (!m.has(k)) {
@@ -85,53 +75,79 @@ const builtins = {
             }
             return v
         }
+        result.object = m
+        result.toString = () => m.toString().substr('OrderedMap '.length)
+        return result
     },
     'list': gen => {
-        const items = []
-        gen(x => items.push(x))
-        const il = immutable.List(items)
+        let items = immutable.List()
+        gen(x => {
+            items = items.push(x)
+        })
         const result = c => {
-            const r = il.forEach(c)
-            if (r instanceof rt.Result) {
-                return r
+            for (let i of items) {
+                const r = c(i)
+                if (r instanceof Result) {
+                    return r
+                }
             }
+            return null
         }
-        result[rt.LIST] = il
+        result.object = items
+        result.toString = () => items.toString().substr('List '.length)
+        return result
+    },
+    'set': gen => {
+        let set = immutable.Set()
+        gen(x => {
+            set = set.add(x)
+        })
+        const result = c => {
+            for (let i of set) {
+                const r = c(i)
+                if (r instanceof Result) {
+                    return r
+                }
+            }
+            return null
+        }
+        result.object = set
+        result.toString = () => set.toString().substr('Set '.length)
         return result
     },
     'size': gen => {
-        if (rt.LIST in gen) {
-            return gen[rt.LIST].size
+        if ('object' in gen) {
+            return gen.object.size
         }
         let n = 0
         gen(x => n++)
         return n
     },
     'at': (i, gen) => {
-        if (rt.LIST in gen) {
-            return gen[rt.LIST].get(i)
+        if ('object' in gen) {
+            return gen.object.get(i)
         }
         const tag = {}
         let j = 0
-        const result = gen(value => (j++ === i) && new rt.Result(tag, value))
-        if (result instanceof rt.Result && result.tag === tag) {
+        const result = gen(value => (j++ === i) && new Result(tag, value))
+        if (result instanceof Result && result.tag === tag) {
             return result.value
         }
         return result
     },
     'concat': (g1, g2) => {
-        if (rt.LIST in g1 && rt.LIST in g2) {
-            const gen = c => {
-                g1(c)
-                g2(c)
-            }
-            gen[rt.LIST] = g1[rt.LIST].merge(g2[rt.LIST])
+        const gen = c => {
+            g1(c)
+            g2(c)
+        }
+        if ('object' in g1 && 'object' in g2 && g1.object instanceof immutable.List && g2.object instanceof immutable.List) {
+            gen.object = g1.object.merge(g2.object)
         }
     },
     'arity': f => f.length,
     'prompt': question => {
         if (isBrowser) {
-            return  prompt(question)
+            return prompt(question)
         } else {
             const forceSync = require('sync-rpc')
             const syncPrompt = forceSync(require.resolve('./prompt'))

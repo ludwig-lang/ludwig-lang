@@ -1,5 +1,3 @@
-const LIST = Symbol('list')
-
 class Result {
     constructor(tag, value) {
         this.tag = tag
@@ -8,7 +6,4 @@ class Result {
 }
 
 
-module.exports = {
-    Result,
-    LIST,
-}
+module.exports = Result

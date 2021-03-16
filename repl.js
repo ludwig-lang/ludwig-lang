@@ -10,7 +10,13 @@ while (true) {
     try {
         const result = ludwig.eval(line, '', env)
         if (result !== undefined && result !== null) {
-            console.log(result);
+            const savedToString = Function.prototype.toString
+            Function.prototype.toString = () => 'λ'
+            try {
+                console.log(result + '');
+            } finally {
+                Function.prototype.toString = savedToString
+            }
         }
     } catch (e) {
         console.error(e)
