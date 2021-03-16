@@ -176,6 +176,33 @@ Chained if:
 
 ### Functions
 
+Function `[arity f]` returns the number of arguments of function `f`:
+```
+[println [arity [\[] [print `booo`]]]]
+[println [arity +]]
+[println [arity if]]
+```
+
+All Ludwig functions except to `,` (the list constructor) have fixed number of arguments.
+```
+# this will produce an error
+[+ one] 
+```
+
+```
+# this too
+[+ one one one] 
+```
+
+All are fine
+```
+[println [arity ,]] # returns 0 but it's actually "any"
+[println [,]]
+[println [, one]]
+[println [, one two]]
+```
+
+
 ## Functions for everything
 
 ### Variables

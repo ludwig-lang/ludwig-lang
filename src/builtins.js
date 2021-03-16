@@ -174,5 +174,6 @@ const builtins = {
     }
 }
 builtins.__proto__ = null
+builtins[','].variadic = true
 
 module.exports = builtins

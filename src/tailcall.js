@@ -16,6 +16,10 @@ class TailCallable extends Function {
         while(f instanceof TailCallable) {
             [f, args] = f.__tail_call__(args)
         }
+        if (f.length !== args.length && !f.variadic) {
+            throw Error(`Invalid number of arguments. Expected ${f.length} got ${args.length}.`)
+        }
+
         const result = f(...args)
         return result !== undefined ? result : null
     }
