@@ -20,14 +20,21 @@ const builtins = {
     '<=': (x, y) => x <= y,
     'if': tailcall(3, args => args[0] ? [args[1], []] : [args[2], []]),
     'num': s => {
-        if (s === 'NaN') {
-            return NaN
+        switch (s.toLocaleString()) {
+            case 'nan':
+                return NaN
+            case 'infinity':
+            case '+infinity':
+                return Infinity
+            case '-infinity':
+                return -Infinity
+            default:
+                const result = parseFloat(s.replaceAll('_', ''))
+                if (Number.isNaN(result)) {
+                    throw Error('Invalid number format')
+                }
+                return result
         }
-        const result = parseFloat(s.replaceAll('_', ''))
-        if (Number.isNaN(result)) {
-            throw Error('Invalid number format')
-        }
-        return result
     },
     'str': x => {
         const savedToString = Function.prototype.toString
