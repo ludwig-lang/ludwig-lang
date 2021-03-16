@@ -31,7 +31,7 @@ jobs:
         run: npm install
         working-directory: ./docs
       - name: Build page
-        run: npm run build
+        run: CI=false npm run build
         working-directory: ./docs
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
