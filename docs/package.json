@@ -6,7 +6,7 @@
   "dependencies": {
     "@mdx-js/loader": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
-    "ludwig-lang": "0.1.11",
+    "ludwig-lang": "0.1.16",
     "markdown-styles": "^3.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
