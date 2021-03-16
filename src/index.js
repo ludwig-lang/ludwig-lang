@@ -255,4 +255,38 @@ if (isNode) {
     }
 }
 
+function repl() {
+    const env = ludwig.env()
+
+    while (true) {
+        const line = env.prompt('')
+        if (line === '') {
+            break
+        }
+        try {
+            const result = ludwig.eval(line, '', env)
+            if (result !== undefined && result !== null) {
+                const savedToString = Function.prototype.toString
+                Function.prototype.toString = () => 'λ'
+                try {
+                    console.log(result + '');
+                } finally {
+                    Function.prototype.toString = savedToString
+                }
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+}
+
+if (require.main === module) {
+    const args = process.argv.slice(2)
+    if (args.length) {
+        builtins.load(args[0])
+    } else {
+        repl();
+    }
+}
+
 module.exports = ludwig
