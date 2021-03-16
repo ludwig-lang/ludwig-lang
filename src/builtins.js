@@ -1,6 +1,7 @@
 const Result = require('./result')
 const immutable = require('immutable')
 const tailcall = require('./tailcall')
+const {isNode} = require("browser-or-node");
 const {isBrowser} = require('browser-or-node')
 
 function number(x) {
@@ -22,20 +23,35 @@ const builtins = {
         if (s === 'NaN') {
             return NaN
         }
-        const result = parseFloat(s)
+        const result = parseFloat(s.replaceAll('_', ''))
         if (Number.isNaN(result)) {
             throw Error('Invalid number format')
         }
         return result
     },
+    'str': x => {
+        const savedToString = Function.prototype.toString
+        try {
+            Function.prototype.toString = () => 'λ'
+            return x + ''
+        } finally {
+            Function.prototype.toString = savedToString
+        }
+    },
     ',': (...args) => builtins.list(c => args.forEach(c)),
-    'println': x => console.log(x) & null,
+    'print': x => {
+        if (isNode) {
+            process.stdout.write(x)
+        } else {
+            console.log(x)
+        }
+    },
     'var': x => {
         const get = () => x
         const set = value => {
             return x = value
         }
-        return m => {
+        const result = m => {
             switch (m) {
                 case 'get':
                     return get
@@ -45,6 +61,8 @@ const builtins = {
                     throw Error('Illegal argument')
             }
         }
+        result.toString = () => `<${x}>`
+        return result
     },
     'throw': msg => {
         throw Error(msg)

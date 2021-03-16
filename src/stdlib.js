@@ -5,6 +5,9 @@ module.exports = `
 [= two [num \`2\`]]
 [= true [<= one two]]
 [= false [<= two one]]
+[= newline \`
+\` ]
+[= println [\\ [x] [print x] [print newline]]]
 [= ! [\\[x]
   [if x [\\[] false] [\\[] true]]
 ]]

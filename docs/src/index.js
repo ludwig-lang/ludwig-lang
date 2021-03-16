@@ -3,7 +3,7 @@ import {MDXProvider} from '@mdx-js/react'
 import ReactDOM from 'react-dom';
 import './index.css'
 /* eslint-disable */
-import Content from '!babel-loader!@mdx-js/loader!./README.md'
+import Content from '!babel-loader!@mdx-js/loader!./index.md'
 import ludwig from 'ludwig-lang'
 
 const closeChars = new Map([
@@ -55,7 +55,7 @@ function LudwigSnippet(props) {
     const output = results && <textarea readOnly
                                    rows={results.match(/[^\r\n]+/g).length + 1}
                                    cols="80"
-                                   style={{fontFamily: 'Monospace', resize: 'none', width: '100%'}}
+                                   style={{fontFamily: 'Monospace', resize: 'none', width: '100%', 'background-color': 'black', color: 'white'}}
                                    value={results}/>
 
 
@@ -94,7 +94,7 @@ function LudwigSnippet(props) {
             <div style={{position: 'relative'}}>
                 {input}
                 <button type="button" disabled={!idle} style={{position: 'absolute', right: '0px', top: '0px'}}
-                        onClick={execute}>Run
+                        onClick={execute}>▶️Run️
                 </button>
             </div>
             {results && <p>{output}</p>}
