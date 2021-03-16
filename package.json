@@ -1,6 +1,6 @@
 {
-  "name": "ludwig-lang",
-  "version": "0.1.17",
+  "name": "ludwig-lang-docs",
+  "version": "0.1.18",
   "description": "The Ludwig Programming Language",
   "homepage": "hhttps://github.com/ludwig-lang/ludwig-lang",
   "keywords": [
@@ -8,7 +8,7 @@
     "interpreter",
     "lisp"
   ],
-  "main": "build/index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
