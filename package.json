@@ -3,8 +3,12 @@
   "version": "0.1.12",
   "description": "The Ludwig Programming Language",
   "homepage": "hhttps://github.com/ludwig-lang/ludwig-lang",
-  "keywords": ["programming language", "interpreter", "lisp"],
-  "main": "index.js",
+  "keywords": [
+    "programming language",
+    "interpreter",
+    "lisp"
+  ],
+  "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
