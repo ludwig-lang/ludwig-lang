@@ -1,5 +1,8 @@
 # The Ludwig Programming Language
 
+__All code samples in this document can be executed and edited directly in the browser.
+Please check out [an interactive version](https://ludwig-lang.github.io/ludwig-lang/) of this page.__
+
 Ludwig is a minimalistic high-level multi-paradigm dynamically-typed programming language 
 with a super-simple but human-friendly syntax.
 

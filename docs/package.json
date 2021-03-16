@@ -1,6 +1,6 @@
 {
-  "name": "home",
-  "homepage": "http://ludwig-lang.github.io/home",
+  "name": "ludwig-lang",
+  "homepage": "http://ludwig-lang.github.io/ludwig-lang/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
