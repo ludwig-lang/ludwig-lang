@@ -198,6 +198,7 @@ Arithmetic operations:
 [println [- x y]]
 [println [* x y]]
 [println [/ x y]]
+[println [^ x y]]
 # modulo
 [println [mod x y]]
 [println [mod y x]]

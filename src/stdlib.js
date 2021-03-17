@@ -4,8 +4,12 @@ module.exports = `
 [= zero [num \`0\`]]
 [= one [num \`1\`]]
 [= two [num \`2\`]]
+[= pi [num \'3.141592653589793\']]
 [= true [<= one two]]
 [= false [<= two one]]
+[= bool? [\\[x]
+  [|| [== x true] [\\[] [== x false]]]
+]]
 [= newline \`
 \` ]
 [= println [\\ [x] [print x] [print newline]]]
