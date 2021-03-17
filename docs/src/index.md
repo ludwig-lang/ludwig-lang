@@ -30,7 +30,7 @@ using Lisp macros or any similar metaprogramming technique
 and has just two special forms comparing to more than 25 in most LISP realizations.
 
 The reference implementation of Ludwig interpreter is written in Java Script and can be used in both NodeJS and browser applications.
-Due to the simplicity of the language, implementing an interpreter or a compiler in other languages including Ludwig itself
+Due to the simplicity of the language, implementation of an interpreter or a compiler in other languages including Ludwig itself
 should be an easy task. 
 
 Ludwig contains 0.00% syntax sugar. This means that programs written in Ludwig are typically longer than equivalent programs
