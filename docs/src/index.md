@@ -1,16 +1,24 @@
 # The Ludwig Programming Language
 
+_For the clarity we are aiming at is indeed complete clarity. Ludwig Wittgenstein_
+
 __All code samples in this document can be executed and edited directly in the browser.
 Please check out [an interactive version](https://ludwig-lang.github.io/ludwig-lang/) of this page.__
 
-Ludwig is a minimalistic high-level multi-paradigm dynamically-typed programming language 
-with a super-simple but human-friendly syntax.
+Ludwig is a high-level multi-paradigm dynamically-typed programming language 
+with a super-simple but human-friendly syntax. It's built upon a minimalistic set of basic concepts,
+but naturally expands _ad inifinitum_ like a seed becomes a tree.
+It seamlessly unifies functional and object-oriented styles of programming,
+encourages single assignment immutability but permits mutable state when necessary,
+supports lazy evaluation and tail recursion, and provides a uniform API for both "fluent" generators and materialized persistent data structures. 
 
 The aim of this project is to explore a possibility of building a practically usable and human-friendly programming language
 using the fewest number of language constructs.
 
 Ludwig is named after Ludwig Wittgenstein, a prominent Austrian-British philosopher who worked in the fields of philosophy of 
-mathematics and philosophy of language.
+mathematics and philosophy of language. Many of the ideas realized in Ludwig come from such programming languages like Lisp, Smalltalk,
+Rebol and Red, but it was no less inspired by the dizzying passion for simplicity and clarity which can be found in the works of Ludwig Wittgenstein.
+ 
 
 We believe that after its run-time library and tooling mature, Ludwig can be used as a primary language for writing all kinds
 of software, from simple scripts to server-side applications.
@@ -25,8 +33,8 @@ Ludwig doesn't have and doesn't need special syntax for such basic constructs as
 module imports, visibility modifiers, object instantiation, visibility modifiers, and even numerical or boolean literals!
 Nonetheless, it does support all the aforementioned features in a very consistent and easy to grasp manner. 
 Basically, instead of having a fixed set of hard-coded constructs such as the `if-then-else` statement, Ludwig allows you to 
-define new control structures as regular functions. The same can be done in Lisp, but Ludwig achieves it without 
-using Lisp macros or any similar metaprogramming technique 
+define new control structures as regular functions. The same can be done in LISP, but Ludwig achieves it without 
+using LISP macros or any similar metaprogramming technique 
 and has just two special forms comparing to more than 25 in most LISP realizations.
 
 The reference implementation of Ludwig interpreter is written in Java Script and can be used in both NodeJS and browser applications.
@@ -35,7 +43,7 @@ should be an easy task.
 
 Ludwig contains 0.00% syntax sugar. This means that programs written in Ludwig are typically longer than equivalent programs
 written in other dynamic languages such as Python, JavaScript or LISP using various flavors of syntax sugar to provide
-shortcuts to common operations. As with Lisp's parentheses, some people may find ubiquitous square brackets in Ludwig code 
+shortcuts to common patterns. As with LISP's parentheses, some people may find ubiquitous square brackets in Ludwig code 
 annoying and distracting. With its extremely simple and regular (even comparing to Lisp's) syntax, Ludwig is a great 
 candidate for experiments with non-textual structural or projectional editing approaches. 
 

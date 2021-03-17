@@ -25,9 +25,12 @@ const builtins = {
         switch (s.toLowerCase()) {
             case 'nan':
                 return NaN
+            case 'inf':
+            case '+inf':
             case 'infinity':
             case '+infinity':
                 return Infinity
+            case '-inf':
             case '-infinity':
                 return -Infinity
             default:
@@ -61,15 +64,15 @@ const builtins = {
     },
     'var': x => {
         const get = () => x
-        const set = value => {
+        const setter = value => {
             return x = value
         }
         const result = m => {
             switch (m) {
                 case 'get':
-                    return get
+                    return x
                 case 'let':
-                    return set
+                    return setter
                 default:
                     throw Error('Illegal argument')
             }
