@@ -216,6 +216,27 @@ All are fine
 [get x]
 ```
 
+```
+[= counter [var zero]]
+[= next_id [\[] [++ counter]]]
+
+[println [next_id]]
+[println [next_id]]
+[println [next_id]]
+```
+
+```
+[= next_id [[\[]  
+  [= counter [var zero]]  
+  [\[] [++ counter]]
+]]]
+  
+
+[println [next_id]]
+[println [next_id]]
+[println [next_id]]
+```
+
 ### Generators
 Ludwig's approach to iterables, generators, sequences, collections or how you name them is different from other programming languages.
 A generator is simply a function which takes another single-argument function as an argument.
@@ -243,9 +264,8 @@ A generator that yields 20 values:
   [= i [var zero]]
   [= iter [\ []
     [println [get i]]
-    [if [< [++ i] [num `20`]]
+    [on [< [++ i] [num `20`]]
       iter
-      [\[]]
     ]
   ]]
   [iter]
