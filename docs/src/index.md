@@ -222,14 +222,16 @@ All Ludwig functions except to `,` (the list constructor) have fixed number of a
 [+ one one one] 
 ```
 
-All are fine
+The list constructor function `,` can accept any number of arguments
 ```
-[println [arity ,]] # returns 0 but it's actually "any"
+[println [arity ,]]
 [println [,]]
 [println [, one]]
 [println [, one two]]
 ```
 
+Following the philosophy of the language, we are not planning to introduce any other variadic functions bu `,`.
+Even though variadic functions can be convenient, they also introduce unnecessary ambiguities and sometimes lead to hard-to-spot bugs.
 
 ### Tail recursion
 

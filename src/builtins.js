@@ -181,7 +181,7 @@ const builtins = {
             gen.object = g1.object.merge(g2.object)
         }
     },
-    'arity': f => f.length,
+    'arity': f => (f === builtins[',']) ? null : f.length,
     'prompt': question => {
         if (isBrowser) {
             return prompt(question)
