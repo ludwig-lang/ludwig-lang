@@ -32,7 +32,7 @@ module.exports = `
 [= < [\\ [x y] [&& [<= x y] [\\ [] [! [>= x y]]]]]]
 [= > [\\ [x y] [< y x]]]
 [= >= [\\ [x y] [<= y x]]]
-[= get [\\[var] [[var \`get\`]]]]
+[= get [\\[var] [var \`get\`]]]
 [= let [\\[var value] [[var \`let\`] value]]]
 [= += [\\[var value] [let var [+ [get var] value]]]]
 [= ++ [\\[v] [+= v one]]]
