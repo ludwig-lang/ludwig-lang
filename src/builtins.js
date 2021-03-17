@@ -16,6 +16,8 @@ const builtins = {
     '-': (x, y) => number(x) - number(y),
     '*': (x, y) => number(x) * number(y),
     '/': (x, y) => number(x) / number(y),
+    'mod': (x, y) => number(x) % number(y),
+    'div': (x, y) => Math.trunc(number(x) / number(y)),
     '~': x => -number(x),
     '<=': (x, y) => x <= y,
     'if': tailcall(3, args => args[0] ? [args[1], []] : [args[2], []]),

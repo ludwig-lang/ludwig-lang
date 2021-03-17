@@ -165,6 +165,7 @@ Chained if:
 ```
 ### Numbers
 
+Valid number formats:
 ```
 [println [num `123.45`]]
 [println [num `+123.45`]]
@@ -172,6 +173,26 @@ Chained if:
 [println [num `1.2345e+2`]]
 [println [num `1_000_000_000`]]
 [println [num `NaN`]]
+[println [num `Infinity`]]
+[println [num `-Infinity`]]
+```
+
+Arithmetic operations:
+```
+[= x [num `7`]]
+[= y [num `3`]]
+[println [+ x y]]
+[println [- x y]]
+[println [* x y]]
+[println [/ x y]]
+# modulo
+[println [mod x y]]
+[println [mod y x]]
+# integer division
+[println [div x y]]
+[println [div y x]]
+# negation
+[println [~ x]]
 ```
 
 ### Functions
@@ -206,16 +227,43 @@ All are fine
 ## Functions for everything
 
 ### Variables
+As was said before, all bindings in Ludwig are static.
+Once a symbol is assigned a value, it cannot be assigned another value in the same lexical context.
+```
+[= x `a`] # okay
+[= x `b`] # this will fail
+
+```
+This means that all bindings are immutable. That is very good for the correctness of your program, but sometimes
+you do need mutable state. Ludwig allows for mutability by providing a special kind of container primitive which internal
+state can be mutated. These containers are quite naturally called "variables" or "vars".
+
+While it's possible to create other high-level mutable objects **using** *var* objects, they are the only primitives
+allowing for mutability.
+A variable object can be created using `[var initial-value]` function.
 ```
 [= x [var zero]]
 ```
 
+The value of a variable can be retrieved using `let` function and modified using `set`:
+
 ```
 [= x [var one]]
-[let x [+ [get x ] one]]
-[get x]
+[println [get x]]
+[let x two] 
+[println [get x]]
 ```
 
+Variables containing numerical values can be incremeted or decremented:
+```
+[= x [var zero]]
+[++ x]
+[println [get x]]
+[-- x] 
+[println [get x]]
+```
+
+Variables can be used to create "stateful functions":
 ```
 [= counter [var zero]]
 [= next_id [\[] [++ counter]]]
@@ -225,6 +273,8 @@ All are fine
 [println [next_id]]
 ```
 
+The example above works fine, but what if we want to hide (encapsulate) its internal state?
+The old wrapping trick does just that: 
 ```
 [= next_id [[\[]  
   [= counter [var zero]]  
@@ -283,6 +333,9 @@ A generator that yields nothing:
 [generator println]
 ```
 ### Lists
+Lists are basically materialized generators which store values in memory instead of calculating them on every call.
+The easiest way to create a list is by using the list constructor function `,`.
+It accepts an arbitrary number of arguments and returns a generator yielding those values.
 ```
 [= items [, `a` `b` `c`]]
 [println items]
@@ -292,6 +345,33 @@ A generator that yields nothing:
 [println [at two items]]
 [items println]
 ```
+
+An empty list:
+```
+[,]
+```
+
+Any finite fluent (non-materialized) generator can be converted into a list using `[list gen]` function.
+```
+[= gen [\[yield]
+    [println `yielding values`]
+    [yield zero]
+    [yield one]
+    [yield two]
+]]
+
+[= items [list gen]] # prints `yielding values`
+items
+```
+
+Be careful, if you call `list` on an infinite generator, your application will crash with out of memory error!
+
+Again, lists are generators, are "normal" functions. However, list-backed generators have a number of distinctive properties:
+- `[size gen]` and  `[at index gen]` require constant time, O(1).
+- lists have nice string representations, e.g. `[ 1, 2, 3 ]`
+- lists are implemented using persistent data structures, meaning that such operations as addition or deletion of list elemnts
+involve only limited copying 
+
 
 ### Sets
 
