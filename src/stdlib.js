@@ -1,5 +1,6 @@
 module.exports = `
 [= null [[\\[]]]]
+[= null? [\\[x] [== x null]]]
 [= zero [num \`0\`]]
 [= one [num \`1\`]]
 [= two [num \`2\`]]

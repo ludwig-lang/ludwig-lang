@@ -47,6 +47,10 @@ const builtins = {
             Function.prototype.toString = savedToString
         }
     },
+    'num?': x => typeof x === 'number',
+    'str?': x => typeof x === 'string',
+    'bool?': x => typeof x === 'boolean',
+    'fun?': x => typeof x === 'function',
     ',': (...args) => builtins.list(c => args.forEach(c)),
     'print': x => {
         if (isNode) {
