@@ -20,7 +20,7 @@ const builtins = {
     '<=': (x, y) => x <= y,
     'if': tailcall(3, args => args[0] ? [args[1], []] : [args[2], []]),
     'num': s => {
-        switch (s.toLocaleString()) {
+        switch (s.toLowerCase()) {
             case 'nan':
                 return NaN
             case 'infinity':
