@@ -39,7 +39,7 @@ shortcuts to common operations. As with Lisp's parentheses, some people may find
 annoying and distracting. With its extremely simple and regular (even comparing to Lisp's) syntax, Ludwig is a great 
 candidate for experiments with non-textual structural or projectional editing approaches. 
 
-## THe syntax
+## The syntax
 
 I promise you, it will take you no longer than 5 minutes to learn the full syntax. Let's start with something very simple.
 
