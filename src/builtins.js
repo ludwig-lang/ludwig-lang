@@ -105,6 +105,9 @@ const builtins = {
         return result
     },
     'list': gen => {
+        if ('object' in gen && gen.object instanceof immutable.List) {
+            return gen
+        }
         let items = immutable.List()
         gen(x => {
             items = items.push(x)
@@ -123,6 +126,9 @@ const builtins = {
         return result
     },
     'set': gen => {
+        if ('object' in gen && gen.object instanceof immutable.Set) {
+            return gen
+        }
         let set = immutable.Set()
         gen(x => {
             set = set.add(x)
