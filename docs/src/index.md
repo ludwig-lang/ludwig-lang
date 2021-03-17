@@ -29,7 +29,7 @@ define new control structures as regular functions. The same can be done in Lisp
 using Lisp macros or any similar metaprogramming technique 
 and has just two special forms comparing to more than 25 in most LISP realizations.
 
-The reference implementation of Ludwig interpreter is written in Java Script and can be used in both NodeJS and browser applications .
+The reference implementation of Ludwig interpreter is written in Java Script and can be used in both NodeJS and browser applications.
 Due to the simplicity of the language, implementing an interpreter or a compiler in other languages including Ludwig itself
 should be an easy task. 
 
@@ -38,6 +38,10 @@ written in other dynamic languages such as Python, JavaScript or LISP using vari
 shortcuts to common operations. As with Lisp's parentheses, some people may find ubiquitous square brackets in Ludwig code 
 annoying and distracting. With its extremely simple and regular (even comparing to Lisp's) syntax, Ludwig is a great 
 candidate for experiments with non-textual structural or projectional editing approaches. 
+
+## THe syntax
+
+I promise you, it will take you no longer than 5 minutes to learn the full syntax. Let's start with something very simple.
 
 ```
 # Our very first program
@@ -56,7 +60,7 @@ and just `[` for a bracket.
 String literals are surrounded with backquotes.    
  
 
-A slightly more complex example:
+Let's now consider a slightly more complex example:
 ```
 # Let's define a function first
 [= hello [\ [name] 
@@ -69,32 +73,33 @@ A slightly more complex example:
 
 It defines a new function, `hello` with a single argument, `name` 
 (strictly speaking, it binds symbol `hello` to an anonymous lambda-function).
-The syntax **\[ =** *symbol* *value* **]** is used for all assignments.
+The syntax `[= symbol value]` is used for all assignments.
 All symbols in Ludwig are constants, so you cannot redefine one, but some of them may have mutable "inner" state.
 
 
-The function body [\\ [name] [print \`Hello, \`] [println name]] consists of the special symbol **\\**
+The function body in enclosed with square brackets and consists of the special symbol `\`
 which stands for the Greek letter λ *"Lambda"*, a list of arguments (just one in our case) enclosed with brackets,
 and the function's body, consisting in our case of two expressions, 
 one printing the word `Hello`, another printing the argument `name`.
 
-The formal syntax for a λ-function is **\[ \\ \[** *argument* * **]** *expression* * **]**.
+The formal syntax for a λ-function is `[\ [argument*] expression*]`.
 The result of a λ-function is produced by the last expression of its body.
 Each expression in the body can be a symbol, a string literal, an assignment, a function invocation or a nested λ-function literal.
 
 Finally, we call the newly defined function, passing `World` as an argument.
 
 Congratulations! At this point I've learned Ludwig's syntax in full.
+The example above contains all the possible Ludwig syntax constructs.
 Yes, again: this is everything you need to know:
 - whitespace doesn't matter 
-- comments start with **#**
+- comments start with `#`
 - string literals should be put within \` back-quotes \`
 - function invocations use "square-bracketed" S-expressions 
-- assignments have the form **\[ =** *symbol* *value* **]**
-- anonymous functions are defined using the λ-syntax: **\[ \\ \[** *argument* * **]** *expression* * **]**
+- assignments have the form `[= symbol value ]`
+- anonymous functions are defined using the λ-syntax: `[\ [argument*] expression*]`
 - symbols (constants' names) can be anything that doesn't clash with the above rules
 
-Yes, Ludwig does support numbers and boolean values, mutable state, collections, objects, module imports and much more, 
+Yes, Ludwig does support control structures, numbers and boolean values, mutable state, collections, objects, module imports and much more, 
 but all these features don't require any new syntax constructs.
 
 
@@ -197,6 +202,8 @@ Arithmetic operations:
 
 ### Functions
 
+### Number of arguments
+
 Function `[arity f]` returns the number of arguments of function `f`:
 ```
 [println [arity [\[] [print `booo`]]]]
@@ -223,6 +230,10 @@ All are fine
 [println [, one two]]
 ```
 
+
+### Tail recursion
+
+### Errors
 
 ## Functions for everything
 
