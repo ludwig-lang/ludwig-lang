@@ -65,7 +65,7 @@ function LudwigSnippet(props) {
     function execute() {
         let output = ''
         const env = ludwig.env()
-        const {str} = ludwig
+        const {str} = env
         env.println = x => {
             output += `${x}\n`
         }
