@@ -81,7 +81,6 @@ const builtins = {
         }
     },
     'var': x => {
-        const get = () => x
         const setter = value => {
             return x = value
         }
@@ -132,7 +131,7 @@ const builtins = {
         return result
     },
     'list': gen => {
-        if ('object' in gen && gen.object instanceof immutable.List) {
+        if (gen.object instanceof immutable.List) {
             return gen
         }
         let items = immutable.List()
@@ -153,7 +152,7 @@ const builtins = {
         return result
     },
     'set': gen => {
-        if ('object' in gen && gen.object instanceof immutable.Set) {
+        if (gen.object instanceof immutable.Set) {
             return gen
         }
         let set = immutable.Set()
@@ -182,7 +181,7 @@ const builtins = {
         return n
     },
     'at': (i, gen) => {
-        if ('object' in gen) {
+        if (gen.object instanceof immutable.List) {
             return gen.object.get(i)
         }
         const tag = {}
@@ -209,7 +208,7 @@ const builtins = {
             g1(c)
             g2(c)
         }
-        if ('object' in g1 && 'object' in g2 && g1.object instanceof immutable.List && g2.object instanceof immutable.List) {
+        if (g1.object instanceof immutable.List && g2.object instanceof immutable.List) {
             gen.object = g1.object.merge(g2.object)
         }
     },
