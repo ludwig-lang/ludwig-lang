@@ -546,7 +546,7 @@ We can also hide the mutable state from direct modification (encapsulate it):
 ```
 [= point [\[x y]
   [= my-x [var x]]
-  [= my-x [var y]]
+  [= my-y [var y]]
   [record [, 
     `x` [\[] [get my-x]]
     `y` [\[] [get my-y]]
