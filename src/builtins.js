@@ -192,6 +192,17 @@ const builtins = {
         }
         return result
     },
+    'contains': (gen, item) => {
+        if (gen.object instanceof immutable.Set) {
+            return gen.object.has(item)
+        }
+        const tag = {}
+        const result = gen(value => (value === item) && new Result(tag, true))
+        if (result instanceof Result && result.tag === tag) {
+            return result.value
+        }
+        return result
+    },
     'concat': (g1, g2) => {
         const gen = c => {
             g1(c)
