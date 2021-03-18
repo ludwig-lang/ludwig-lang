@@ -528,8 +528,8 @@ Let's add a method:
     `x` [var x]
     `y` [var y]
     `dist` [\[] 
-       [sqrt [+ [* [get my-x] [get my-x]] 
-                [* [get my-y] [get my-y]]]]
+       [sqrt [+ [* [get [it `x`]] [get [it `x`]]] 
+                [* [get [it `y`]] [get [it `y`]]]]]
     ]
   ]]]
 ]]
@@ -556,6 +556,7 @@ We can also hide the mutable state from direct modification (encapsulate it):
        [let my-x x]
        [let my-y y]
      ]
+  ]]
 ]]
 
 [= p [point zero one]]
@@ -592,7 +593,7 @@ We can also hide the mutable state from direct modification (encapsulate it):
 ```
 [= value [lazy [\[]
   [println `Calculating...`]
-  `A result of a very expensive calulation`
+  `A result of a very expensive calculation`
 ]]]
 
 # Prints "Calculating..." only once
