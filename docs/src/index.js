@@ -17,6 +17,10 @@ function LudwigSnippet(props) {
     const [error, setError] = useState('')
     const [idle, setIdle] = useState(true)
 
+    const language = props.className && props.className.replace(/language-/, '')
+    if (language && language !== 'ludwig') {
+        return <pre>{code}</pre>
+    }
 
     const input = <textarea defaultValue={code}
                             readOnly={!idle}

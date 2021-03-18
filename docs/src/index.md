@@ -41,9 +41,26 @@ The reference implementation of Ludwig interpreter is written in Java Script and
 Due to the simplicity of the language, implementation of an interpreter or a compiler in other languages including Ludwig itself
 should be an easy task. 
 
-Ludwig contains 0.00% syntax sugar. This means that programs written in Ludwig are typically longer than equivalent programs
-written in other dynamic languages such as Python, JavaScript or LISP using various flavors of syntax sugar to provide
-shortcuts to common patterns. As with LISP's parentheses, some people may find ubiquitous square brackets in Ludwig code 
+Ludwig contains 0.00% syntax sugar. It means that some Ludwig constructs may look slightly more complex than their equivalents
+in other languages such as Python, JavaScript or LISP using various flavors of syntax sugar to provide
+shortcuts to common patterns. On the other hand, Ludwig programs can be much more compact and easier to understand than analogous programs written in
+such Baroque languages as Java. Just compare "Hello world" written in Ludwig
+
+```ludwig
+[println `Hello, world`]
+```
+with its Java equivalent:
+```java
+package com.example;
+
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("Hello, world");
+  }
+}
+```
+
+As with LISP's parentheses, some people may find ubiquitous square brackets in Ludwig code 
 annoying and distracting. With its extremely simple and regular (even comparing to Lisp's) syntax, Ludwig is a great 
 candidate for experiments with non-textual structural or projectional editing approaches. 
 
@@ -380,7 +397,7 @@ A generator that yields nothing:
 [generator println]
 ```
 ### Lists
-Lists are basically materialized generators which store values in memory instead of calculating them on every call.
+Lists are materialized generators which store values in memory instead of calculating them on every call.
 The easiest way to create a list is by using the list constructor function `,`.
 It accepts an arbitrary number of arguments and returns a generator yielding those values.
 ```
@@ -421,6 +438,21 @@ involve only limited copying
 
 
 ### Sets
+
+Sets are materialized generators producing unique values.
+Similarly to lists, sets are implemented using persistent data structures.
+Every generator can be converted into a set using the `set` function. Please note that the order of elements
+in the resulting set may differ from their order in the original generator.
+The `contains` function takes constant time `O(1)` for sets. 
+
+```
+[= s [set [, `a` `b` `c` `a`]]]
+[println s]
+[println [contains `a` s]]
+[println [contains `d` s]]
+
+```
+
 
 
 ### Records
