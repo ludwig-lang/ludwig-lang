@@ -65,6 +65,7 @@ function LudwigSnippet(props) {
     function execute() {
         let output = ''
         const env = ludwig.env()
+        const {str} = ludwig
         env.println = x => {
             output += `${x}\n`
         }
@@ -78,20 +79,13 @@ function LudwigSnippet(props) {
         setTimeout(() => {
             try {
                 const res = ludwig.eval(code, '', env)
-                const savedToStr = Function.prototype.toString
-                Function.prototype.toString = () => 'λ'
-                try {
-                    setResults(output + ((res !== null && res !== undefined) ? res + '' : ''))
-                } finally {
-                    Function.prototype.toString = savedToStr
-                }
+                setResults(output + ((res !== null && res !== undefined) ? str(res) : ''))
             } catch (e) {
                 setError(e.message)
             } finally {
                 setIdle(true)
             }
         }, 0)
-
     }
 
     return (
