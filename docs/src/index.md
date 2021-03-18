@@ -448,8 +448,8 @@ The `contains` function takes constant time `O(1)` for sets.
 ```
 [= s [set [, `a` `b` `c` `a`]]]
 [println s]
-[println [contains `a` s]]
-[println [contains `d` s]]
+[println [contains s `a`]]
+[println [contains s `d`]]
 
 ```
 
@@ -528,11 +528,9 @@ Let's add a method:
     `x` [var x]
     `y` [var y]
     `dist` [\[] 
-       [^ 
-         [+ [* [it `x`] [it `x`]] 
-            [* [it `y`] [it `y`]]] 
-         0.5]
-       ]
+       [sqrt [+ [* [get my-x] [get my-x]] 
+                [* [get my-y] [get my-y]]]]
+    ]
   ]]]
 ]]
 
@@ -551,12 +549,9 @@ We can also hide the mutable state from direct modification (encapsulate it):
     `x` [\[] [get my-x]]
     `y` [\[] [get my-y]]
     `dist` [\[] 
-       [^ 
-         [+ [* [get my-x] [get my-x]] 
-            [* [get my-y] [get my-y]]]
-         0.5]
-       ]
-    ]]
+       [sqrt [+ [* [get my-x] [get my-x]] 
+                [* [get my-y] [get my-y]]]]
+    ]
     `move` [\[x y]
        [let my-x x]
        [let my-y y]

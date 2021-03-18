@@ -68,6 +68,7 @@ const builtins = {
     'asinh': Math.asinh,
     'acosh': Math.acosh,
     'atanh': Math.atanh,
+    'sqrt': Math.sqrt,
     'num?': x => typeof x === 'number',
     'str?': x => typeof x === 'string',
     'fun?': x => typeof x === 'function',

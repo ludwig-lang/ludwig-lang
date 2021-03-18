@@ -160,29 +160,35 @@ function expect(token, filename, pos, tokens) {
 const ludwig = {
     loaded: new Map(),
 
-    tokenize(source, ignoreComments) {
+    tokenize(source, ignoreComments, ignoreWhitespace = true) {
         const tokens = []
         let line = 1
         let column = 0
         let pos = 0
 
-        function token(value) {
+        function token(pos, value) {
             return {pos, line, column, value}
         }
 
         while (pos < source.length) {
             let c = source[pos++]
-            if (c === '\n') {
-                line++
-                column = 0
-                continue
-            }
             column++
             if (c.trim() === '') {
+                if (c === '\n') {
+                    line++
+                    column = 0
+                }
+                if (!ignoreWhitespace) {
+                    const start = pos - 1
+                    while (pos < source.length && source[pos].trim() === '') {
+                        pos++
+                    }
+                    token(start, source.substr(start, pos - start))
+                }
                 continue
             }
             if (c === '[' || c === ']') {
-                tokens.push(token(c))
+                tokens.push(token(pos - 1, c))
                 continue
             }
             if (c === '#') {
@@ -191,7 +197,7 @@ const ludwig = {
                     pos++
                 }
                 if (!ignoreComments) {
-                    tokens.push(token(source.substr(start, pos - start)))
+                    tokens.push(token(start, source.substr(start, pos - start)))
                 }
                 line++
                 column = 0
@@ -202,7 +208,7 @@ const ludwig = {
                 while (pos < source.length && source[pos] !== '`') {
                     pos++
                 }
-                tokens.push(token(source.substr(start, pos - start + 1)))
+                tokens.push(token(start, source.substr(start, pos - start + 1)))
                 column += pos - start
                 pos++
                 continue
@@ -211,7 +217,7 @@ const ludwig = {
             while (pos < source.length && !/(\s|\[|]|`)/.test(source[pos])) {
                 pos++
             }
-            tokens.push(token(source.substr(start, pos - start)))
+            tokens.push(token(start, source.substr(start, pos - start)))
 
         }
         return tokens
