@@ -201,7 +201,7 @@ const builtins = {
         if (result instanceof Result && result.tag === tag) {
             return result.value
         }
-        return result
+        return false
     },
     'concat': (g1, g2) => {
         const gen = c => {
