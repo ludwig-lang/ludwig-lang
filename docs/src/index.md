@@ -178,6 +178,10 @@ Chained if:
 ```
 ### Numbers
 
+Numbers are first-class objects in Ludwig. However, there is no support for numeric literals in Ludwig's syntax.
+Instead, Ludwig provides a few functions for *parsing* strings into numbers. The most commonly used parsing function is `num`
+which parses a number from its decimal representation. 
+
 Valid number formats:
 ```
 [println [num `123.45`]]
@@ -188,6 +192,17 @@ Valid number formats:
 [println [num `NaN`]]
 [println [num `Infinity`]]
 [println [num `-Infinity`]]
+```
+
+This may seem awful at a first glance but this approach has in fact a number of advantages over syntax-level support for numeric literal.
+First of all, the fact that the core syntax of the language remains very simple makes it simple to create all kinds of tools 
+like IDE plugins or code highlighters for the language.
+Finally, most developers actually very rarely need to declare a numeric constant. Most numbers come from IO and require parsing anyway.
+Most hardcoded constants in a typical codebase are small integer numbers 0, 1, 2. Ludwig defines those numbers as named constants:
+```
+[println zero]
+[println one]
+[println two]
 ```
 
 Arithmetic operations:
@@ -208,8 +223,18 @@ Arithmetic operations:
 # negation
 [println [~ x]]
 ```
+Unlike LISP where you can sum multiple numbers at once, e.g. `(+ 1 2 3 4)`, in Ludwig all binary arithmetic operators take exactly two arguments.
+Ludwig also uses separate symbols for subtraction (`~`) and unary negation (`~`).
 
 ### Functions
+
+### The anatomy of a function
+
+### Recursion
+
+### Tail recursion
+
+### Mutually recursive functions
 
 ### Number of arguments
 
