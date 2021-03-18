@@ -10,10 +10,6 @@ function error(file, line, column, message, cause = undefined) {
     throw new LudwigError(file, line, column, message, cause)
 }
 
-function token(line, column, value) {
-    return {line, column, value}
-}
-
 function parseTokens(tokens, filename) {
     const expressions = []
     let pos = 0
@@ -167,21 +163,26 @@ const ludwig = {
     tokenize(source, ignoreComments) {
         const tokens = []
         let line = 1
-        let col = 0
+        let column = 0
         let pos = 0
+
+        function token(value) {
+            return {pos, line, column, value}
+        }
+
         while (pos < source.length) {
             let c = source[pos++]
             if (c === '\n') {
                 line++
-                col = 0
+                column = 0
                 continue
             }
-            col++
+            column++
             if (c.trim() === '') {
                 continue
             }
             if (c === '[' || c === ']') {
-                tokens.push(token(line, col, c))
+                tokens.push(token(c))
                 continue
             }
             if (c === '#') {
@@ -190,10 +191,10 @@ const ludwig = {
                     pos++
                 }
                 if (!ignoreComments) {
-                    tokens.push(token(line, col, source.substr(start, pos - start)))
+                    tokens.push(token(source.substr(start, pos - start)))
                 }
                 line++
-                col = 0
+                column = 0
                 continue
             }
             if (c === '`') {
@@ -201,8 +202,8 @@ const ludwig = {
                 while (pos < source.length && source[pos] !== '`') {
                     pos++
                 }
-                tokens.push(token(line, col, source.substr(start, pos - start + 1)))
-                col += pos - start
+                tokens.push(token(source.substr(start, pos - start + 1)))
+                column += pos - start
                 pos++
                 continue
             }
@@ -210,7 +211,7 @@ const ludwig = {
             while (pos < source.length && !/(\s|\[|]|`)/.test(source[pos])) {
                 pos++
             }
-            tokens.push(token(line, col, source.substr(start, pos - start)))
+            tokens.push(token(source.substr(start, pos - start)))
 
         }
         return tokens
