@@ -2,17 +2,9 @@ const Result = require('./result')
 const builtins = require('./builtins')
 const stdlib = require('./stdlib')
 const tailcall = require('./tailcall')
+const LudwigError = require("./LudwigError");
 const {isNode} = require('browser-or-node')
 
-class LudwigError extends Error {
-    constructor(file, line, column, message, cause) {
-        super(`${file} ${line}:${column} ${message}`);
-        this.file = file
-        this.line = line
-        this.column = column
-        this.cause = cause
-    }
-}
 
 function error(file, line, column, message, cause = undefined) {
     throw new LudwigError(file, line, column, message, cause)
@@ -137,7 +129,7 @@ function parseExpression(tokens, pos, filename) {
         return [newpos + 1, tailcall(1, params => {
             const env = params[0]
             try {
-                return [head(env), args.map(a => a(env))]
+                return [head(env), args.map(a => a(env)), filename, line, column]
             } catch (e) {
                 if (e instanceof LudwigError) {
                     throw e

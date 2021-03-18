@@ -221,6 +221,9 @@ const builtins = {
             const syncPrompt = forceSync(require.resolve('./prompt'))
             return syncPrompt(question)
         }
+    },
+    'error': message => {
+        throw new Error(message)
     }
 }
 builtins.__proto__ = null
