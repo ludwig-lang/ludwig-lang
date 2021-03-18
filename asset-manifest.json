@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/ludwig-lang/static/css/main.a66df1be.chunk.css",
-    "main.js": "/ludwig-lang/static/js/main.fc6721ea.chunk.js",
-    "main.js.map": "/ludwig-lang/static/js/main.fc6721ea.chunk.js.map",
-    "runtime-main.js": "/ludwig-lang/static/js/runtime-main.138e9570.js",
-    "runtime-main.js.map": "/ludwig-lang/static/js/runtime-main.138e9570.js.map",
-    "static/js/2.3393ad0d.chunk.js": "/ludwig-lang/static/js/2.3393ad0d.chunk.js",
-    "static/js/2.3393ad0d.chunk.js.map": "/ludwig-lang/static/js/2.3393ad0d.chunk.js.map",
+    "main.js": "/ludwig-lang/static/js/main.7e79c306.chunk.js",
+    "main.js.map": "/ludwig-lang/static/js/main.7e79c306.chunk.js.map",
+    "runtime-main.js": "/ludwig-lang/static/js/runtime-main.ce7fdb47.js",
+    "runtime-main.js.map": "/ludwig-lang/static/js/runtime-main.ce7fdb47.js.map",
+    "static/js/2.fa8c779e.chunk.js": "/ludwig-lang/static/js/2.fa8c779e.chunk.js",
+    "static/js/2.fa8c779e.chunk.js.map": "/ludwig-lang/static/js/2.fa8c779e.chunk.js.map",
     "index.html": "/ludwig-lang/index.html",
     "static/css/main.a66df1be.chunk.css.map": "/ludwig-lang/static/css/main.a66df1be.chunk.css.map",
-    "static/js/2.3393ad0d.chunk.js.LICENSE.txt": "/ludwig-lang/static/js/2.3393ad0d.chunk.js.LICENSE.txt"
+    "static/js/2.fa8c779e.chunk.js.LICENSE.txt": "/ludwig-lang/static/js/2.fa8c779e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.138e9570.js",
-    "static/js/2.3393ad0d.chunk.js",
+    "static/js/runtime-main.ce7fdb47.js",
+    "static/js/2.fa8c779e.chunk.js",
     "static/css/main.a66df1be.chunk.css",
-    "static/js/main.fc6721ea.chunk.js"
+    "static/js/main.7e79c306.chunk.js"
   ]
 }
