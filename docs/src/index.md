@@ -454,8 +454,143 @@ The `contains` function takes constant time `O(1)` for sets.
 ```
 
 
-
 ### Records
+
+One can look at records from different angles. From one, they a just a convenient way to define a special kind of functions.
+Let's define a tabular function f(x) which returns 1 when x = 0, and 0 when x = 1. You cand do that using `if`:
+```
+[= f [\ [x]
+  [if [== x zero]
+      [\[] one]
+      [\[] [if [== x one]
+               [\[] zero]
+               [\[] [error `Unexpected argument value`]]
+           ]
+      ]
+  ]
+]]
+
+[println [f zero]]
+[println [f one]]
+```
+Records provide a less verbose way to achieve the same result:
+```
+[= f [record [, 
+  zero one
+  one zero
+]]]
+
+[println [f zero]]
+[println [f one]]
+```
+You may call `f` a recorded function or simply a record.
+
+This works for all kinds of argument anr result types:
+```
+[= p [record [, 
+  `x` one
+  `y` zero
+]]]
+
+[println p]
+[println [p `x`]]
+[println [p `y`]]
+```
+If you're going to create more "points" you can create a new function for that:
+```
+[= point [\[x y]
+  [record [, 
+    `x` x
+    `y` y
+  ]]
+]]
+
+[= p [point zero one]]
+```
+Wait, it looks as if we've just declared a new type, `point` and then created an instance of that type!
+Let's make our point class ~~movable~~ mutable:
+```
+[= point [\[x y]
+  [record [, 
+    `x` [var x]
+    `y` [var y]
+  ]]
+]]
+
+[= p [point zero one]]
+[let [p `x`] two]
+p
+```
+Let's add a method:
+```
+[= point [\[x y]
+  [= it [record [, 
+    `x` [var x]
+    `y` [var y]
+    `dist` [\[] 
+       [^ 
+         [+ [* [it `x`] [it `x`]] 
+            [* [it `y`] [it `y`]]] 
+         0.5]
+       ]
+  ]]]
+]]
+
+[= p [point zero one]]
+[println [[p `dist`]]]
+[let [p `x`] [num `3`]]
+[let [p `y`] [num `4`]]
+[println [[p `dist`]]]
+```
+We can also hide the mutable state from direct modification (encapsulate it):
+```
+[= point [\[x y]
+  [= my-x [var x]]
+  [= my-x [var y]]
+  [record [, 
+    `x` [\[] [get my-x]]
+    `y` [\[] [get my-y]]
+    `dist` [\[] 
+       [^ 
+         [+ [* [get my-x] [get my-x]] 
+            [* [get my-y] [get my-y]]]
+         0.5]
+       ]
+    ]]
+    `move` [\[x y]
+       [let my-x x]
+       [let my-y y]
+     ]
+]]
+
+[= p [point zero one]]
+[println [[p `dist`]]]
+[[p `move`] [num `3`] [num `4`]]
+[println [[p `dist`]]]
+```
+
+```
+[= dog [\[name] [record [,
+  `say` [\[] 
+     [print name]
+     [println ` says bark`]
+  ]
+]]]]
+
+[= cat [\[name] [record [,
+  `say` [\[] 
+     [print name]
+     [println ` says mew`]
+  ]
+]]]]
+
+[= jack [dog `Jack`]]
+[= kitty [cat `Kitty`]]
+
+[= animals [, jack kitty]]
+
+[animals [\[a] [[a `say`]]]]
+```
 
 ### Lazy evaluation
 
