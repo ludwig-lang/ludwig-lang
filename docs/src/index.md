@@ -595,9 +595,9 @@ We can also hide the mutable state from direct modification (encapsulate it):
 ### Lazy evaluation
 
 ```
-[= instance [lazy [\[]
-[println `Calculating...`]
-`A result of a very expensive calulation`
+[= value [lazy [\[]
+  [println `Calculating...`]
+  `A result of a very expensive calulation`
 ]]]
 
 # Prints "Calculating..." only once
