@@ -1,6 +1,7 @@
 const Result = require('./result')
 const immutable = require('immutable')
 const tailcall = require('./tailcall')
+const ordered = require('./ordered')
 const {isNode} = require("browser-or-node");
 const {isBrowser} = require('browser-or-node')
 
@@ -9,6 +10,67 @@ function number(x) {
         return x
     }
     throw Error('Expected a number')
+}
+
+const seq = items => {
+    const result = c => {
+        for (let i of result.object) {
+            const r = c(i)
+            if (r instanceof Result) {
+                return r
+            }
+        }
+        return null
+    }
+    result.object = items
+    result.toString = () => result.object.toString()
+    result.equals = (other) => {
+        if (other.object) {
+            return result.object.equals(other.object)
+        }
+        return result === other
+    }
+    result.hashCode = () => result.object.hashCode()
+    return result
+}
+
+const record = gen => {
+    if (gen.object instanceof immutable.OrderedMap) {
+        return gen
+    }
+    let m = immutable.OrderedMap()
+    let isKey = true
+    let key
+    gen(x => {
+        if (isKey) {
+            key = x
+        } else {
+            m = m.set(key, x)
+        }
+        isKey = !isKey
+    })
+    const result = k => {
+        const v = m.get(k)
+        if (v === undefined) {
+            if (!m.has(k)) {
+                if (!isKey) {
+                    return key
+                }
+                throw Error('Illegal argument')
+            }
+        }
+        return v
+    }
+    result.object = m
+    result.toString = () => m.toString().substr('OrderedMap '.length)
+    result.equals = (other) => {
+        if (other.object) {
+            return result.object.equals(other.object)
+        }
+        return result === other
+    }
+    result.hashCode = () => result.object.hashCode()
+    return result
 }
 
 const builtins = {
@@ -20,7 +82,10 @@ const builtins = {
     'mod': (x, y) => number(x) % number(y),
     'div': (x, y) => Math.trunc(number(x) / number(y)),
     '~': x => -number(x),
-    '<=': (x, y) => x <= y,
+    '<=': ordered,
+    '!': x => !x,
+    '&': (x, y) => x & y,
+    '|': (x, y) => x | y,
     'if': tailcall(3, args => args[0] ? [args[1], []] : [args[2], []]),
     'num': s => {
         switch (s.toLowerCase()) {
@@ -102,34 +167,7 @@ const builtins = {
     },
     'length': s => s.length,
     'substring': (s, from, length) => s.substr(from, length),
-    'record': gen => {
-        let m = immutable.OrderedMap()
-        let isKey = true
-        let key
-        gen(x => {
-            if (isKey) {
-                key = x
-            } else {
-                m = m.set(key, x)
-            }
-            isKey = !isKey
-        })
-        const result = k => {
-            const v = m.get(k)
-            if (v === undefined) {
-                if (!m.has(k)) {
-                    if (!isKey) {
-                        return key
-                    }
-                    throw Error('Illegal argument')
-                }
-            }
-            return v
-        }
-        result.object = m
-        result.toString = () => m.toString().substr('OrderedMap '.length)
-        return result
-    },
+    'record': record,
     'list': gen => {
         if (gen.object instanceof immutable.List) {
             return gen
@@ -138,18 +176,7 @@ const builtins = {
         gen(x => {
             items = items.push(x)
         })
-        const result = c => {
-            for (let i of items) {
-                const r = c(i)
-                if (r instanceof Result) {
-                    return r
-                }
-            }
-            return null
-        }
-        result.object = items
-        result.toString = () => items.toString().substr('List '.length)
-        return result
+        return seq(items)
     },
     'set': gen => {
         if (gen.object instanceof immutable.Set) {
@@ -159,18 +186,19 @@ const builtins = {
         gen(x => {
             set = set.add(x)
         })
-        const result = c => {
-            for (let i of set) {
-                const r = c(i)
-                if (r instanceof Result) {
-                    return r
-                }
-            }
-            return null
+        return seq(set)
+    },
+    'union': (a, b) => {
+        if (!a.object instanceof immutable.Set || !b.object instanceof immutable.Set) {
+            throw Error('Wrong argument types')
         }
-        result.object = set
-        result.toString = () => set.toString().substr('Set '.length)
-        return result
+        return seq(a.object.union(b.object))
+    },
+    'intersect': (a, b) => {
+        if (!a.object instanceof immutable.Set || !b.object instanceof immutable.Set) {
+            throw Error('Wrong argument types')
+        }
+        return seq(a.object.intersect(b.object))
     },
     'size': gen => {
         if ('object' in gen) {
