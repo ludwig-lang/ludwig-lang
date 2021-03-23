@@ -57,5 +57,5 @@ module.exports = `
       [get value]
     ]
 ]]
-[= assert [\\[condition] [on [! condition] [\\ [] [error \`Assertion error\`]]]]]
+[= assert [\\[condition] [on [! condition] [\\ [] [throw \`Assertion error\`]]]]]
 `

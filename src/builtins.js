@@ -2,75 +2,14 @@ const Result = require('./result')
 const immutable = require('immutable')
 const tailcall = require('./tailcall')
 const ordered = require('./ordered')
-const {isNode} = require("browser-or-node");
-const {isBrowser} = require('browser-or-node')
+const {isBrowser, isNode} = require("browser-or-node");
+const {ListWrapper, SetWrapper, MapWrapper} = require('./wrappers')
 
 function number(x) {
     if (typeof x == 'number') {
         return x
     }
     throw Error('Expected a number')
-}
-
-const seq = items => {
-    const result = c => {
-        for (let i of result.object) {
-            const r = c(i)
-            if (r instanceof Result) {
-                return r
-            }
-        }
-        return null
-    }
-    result.object = items
-    result.toString = () => result.object.toString()
-    result.equals = (other) => {
-        if (other.object) {
-            return result.object.equals(other.object)
-        }
-        return result === other
-    }
-    result.hashCode = () => result.object.hashCode()
-    return result
-}
-
-const record = gen => {
-    if (gen.object instanceof immutable.OrderedMap) {
-        return gen
-    }
-    let m = immutable.OrderedMap()
-    let isKey = true
-    let key
-    gen(x => {
-        if (isKey) {
-            key = x
-        } else {
-            m = m.set(key, x)
-        }
-        isKey = !isKey
-    })
-    const result = k => {
-        const v = m.get(k)
-        if (v === undefined) {
-            if (!m.has(k)) {
-                if (!isKey) {
-                    return key
-                }
-                throw Error('Illegal argument')
-            }
-        }
-        return v
-    }
-    result.object = m
-    result.toString = () => m.toString().substr('OrderedMap '.length)
-    result.equals = (other) => {
-        if (other.object) {
-            return result.object.equals(other.object)
-        }
-        return result === other
-    }
-    result.hashCode = () => result.object.hashCode()
-    return result
 }
 
 const builtins = {
@@ -167,50 +106,66 @@ const builtins = {
     },
     'length': s => s.length,
     'substring': (s, from, length) => s.substr(from, length),
-    'record': record,
+    'record': gen => {
+        if (gen instanceof MapWrapper) {
+            return gen
+        }
+        let m = immutable.Map()
+        let isKey = true
+        let key
+        gen(x => {
+            if (isKey) {
+                key = x
+            } else {
+                m = m.set(key, x)
+            }
+            isKey = !isKey
+        })
+        return new MapWrapper(m)
+    },
     'list': gen => {
-        if (gen.object instanceof immutable.List) {
+        if (gen instanceof ListWrapper) {
             return gen
         }
         let items = immutable.List()
         gen(x => {
             items = items.push(x)
         })
-        return seq(items)
+        return new ListWrapper(items)
     },
     'set': gen => {
-        if (gen.object instanceof immutable.Set) {
+        if (gen instanceof SetWrapper) {
             return gen
         }
         let set = immutable.Set()
         gen(x => {
             set = set.add(x)
         })
-        return seq(set)
+        return new SetWrapper(set)
     },
     'union': (a, b) => {
-        if (!a.object instanceof immutable.Set || !b.object instanceof immutable.Set) {
+        if (!a instanceof SetWrapper || !b instanceof SetWrapper) {
             throw Error('Wrong argument types')
         }
-        return seq(a.object.union(b.object))
+        return new SetWrapper(a.object.union(b.object))
     },
     'intersect': (a, b) => {
-        if (!a.object instanceof immutable.Set || !b.object instanceof immutable.Set) {
+        if (!a instanceof SetWrapper || !b instanceof SetWrapper) {
             throw Error('Wrong argument types')
         }
-        return seq(a.object.intersect(b.object))
+        return new SetWrapper(a.object.intersect(b.object))
     },
     'size': gen => {
-        if ('object' in gen) {
-            return gen.object.size
+        if ('size' in gen) {
+            return gen.size
         }
         let n = 0
         gen(x => n++)
         return n
     },
     'at': (i, gen) => {
-        if (gen.object instanceof immutable.List) {
-            return gen.object.get(i)
+        if (gen instanceof ListWrapper) {
+            return gen.get(i)
         }
         const tag = {}
         let j = 0
@@ -221,8 +176,8 @@ const builtins = {
         return result
     },
     'contains': (gen, item) => {
-        if (gen.object instanceof immutable.Set) {
-            return gen.object.has(item)
+        if (gen.has) {
+            return gen.has(item)
         }
         const tag = {}
         const result = gen(value => (value === item) && new Result(tag, true))
@@ -232,12 +187,12 @@ const builtins = {
         return false
     },
     'concat': (g1, g2) => {
-        const gen = c => {
+        if (g1 instanceof ListWrapper && g2 instanceof ListWrapper) {
+            return new ListWrapper(g1.object.merge(g2.object))
+        }
+        return c => {
             g1(c)
             g2(c)
-        }
-        if (g1.object instanceof immutable.List && g2.object instanceof immutable.List) {
-            gen.object = g1.object.merge(g2.object)
         }
     },
     'arity': f => (f === builtins[',']) ? null : f.length,
@@ -249,9 +204,6 @@ const builtins = {
             const syncPrompt = forceSync(require.resolve('./prompt'))
             return syncPrompt(question)
         }
-    },
-    'error': message => {
-        throw new Error(message)
     }
 }
 builtins.__proto__ = null
