@@ -1,9 +1,11 @@
 {
   "name": "ludwig-lang",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "The Ludwig Programming Language",
   "homepage": "hhttps://github.com/ludwig-lang/ludwig-lang",
   "keywords": [
+    "ludwig",
+    "wittgenstein",
     "programming language",
     "interpreter",
     "lisp"
