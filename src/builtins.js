@@ -3,7 +3,6 @@ const immutable = require('immutable')
 const tailcall = require('./tailcall')
 const ordered = require('./ordered')
 const {isBrowser, isNode} = require("browser-or-node");
-const {ListWrapper, SetWrapper, MapWrapper} = require('./wrappers')
 
 function number(x) {
     if (typeof x == 'number') {
@@ -11,6 +10,18 @@ function number(x) {
     }
     throw Error('Expected a number')
 }
+
+const callableObject = (func, obj) => {
+    Object.assign(func, obj)
+    Object.setPrototypeOf(func, Object.getPrototypeOf(obj))
+    return func
+}
+
+const generator = (obj) => callableObject(consumer => {
+    for (let x of obj) {
+        consumer(x)
+    }
+}, obj)
 
 const builtins = {
     '+': (x, y) => number(x) + number(y),
@@ -76,10 +87,10 @@ const builtins = {
     'num?': x => typeof x === 'number',
     'str?': x => typeof x === 'string',
     'fun?': x => typeof x === 'function',
-    ',': (...args) => builtins.list(c => args.forEach(c)),
+    ',': (...args) => generator(immutable.List(args)),
     'print': x => {
         if (isNode) {
-            process.stdout.write(x)
+            process.stdout.write(x + '')
         } else {
             console.log(x)
         }
@@ -107,7 +118,7 @@ const builtins = {
     'length': s => s.length,
     'substring': (s, from, length) => s.substr(from, length),
     'record': gen => {
-        if (gen instanceof MapWrapper) {
+        if (gen instanceof immutable.Map) {
             return gen
         }
         let m = immutable.Map()
@@ -121,40 +132,30 @@ const builtins = {
             }
             isKey = !isKey
         })
-        return new MapWrapper(m)
+        return callableObject(key => m.get(key), m)
     },
     'list': gen => {
-        if (gen instanceof ListWrapper) {
+        if (gen instanceof immutable.List) {
             return gen
         }
         let items = immutable.List()
         gen(x => {
             items = items.push(x)
         })
-        return new ListWrapper(items)
+        return generator(items)
     },
     'set': gen => {
-        if (gen instanceof SetWrapper) {
+        if (gen instanceof immutable.Set) {
             return gen
         }
         let set = immutable.Set()
         gen(x => {
             set = set.add(x)
         })
-        return new SetWrapper(set)
+        return generator(set)
     },
-    'union': (a, b) => {
-        if (!a instanceof SetWrapper || !b instanceof SetWrapper) {
-            throw Error('Wrong argument types')
-        }
-        return new SetWrapper(a.object.union(b.object))
-    },
-    'intersect': (a, b) => {
-        if (!a instanceof SetWrapper || !b instanceof SetWrapper) {
-            throw Error('Wrong argument types')
-        }
-        return new SetWrapper(a.object.intersect(b.object))
-    },
+    'union': (a, b) => generator(builtins.set(a).union(builtins.set(b))),
+    'intersect': (a, b) => generator(builtins.set(a).intersect(builtins.set(b))),
     'size': gen => {
         if ('size' in gen) {
             return gen.size
@@ -164,7 +165,7 @@ const builtins = {
         return n
     },
     'at': (i, gen) => {
-        if (gen instanceof ListWrapper) {
+        if (gen instanceof immutable.List) {
             return gen.get(i)
         }
         const tag = {}
@@ -176,7 +177,7 @@ const builtins = {
         return result
     },
     'contains': (gen, item) => {
-        if (gen.has) {
+        if (gen instanceof immutable.Collection) {
             return gen.has(item)
         }
         const tag = {}
@@ -187,8 +188,8 @@ const builtins = {
         return false
     },
     'concat': (g1, g2) => {
-        if (g1 instanceof ListWrapper && g2 instanceof ListWrapper) {
-            return new ListWrapper(g1.object.merge(g2.object))
+        if (g1 instanceof immutable.List && g2 instanceof immutable.List) {
+            return generator(g1.merge(g2))
         }
         return c => {
             g1(c)
