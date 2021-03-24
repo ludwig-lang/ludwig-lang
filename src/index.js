@@ -183,7 +183,7 @@ const ludwig = {
                     while (pos < source.length && source[pos].trim() === '') {
                         pos++
                     }
-                    token(start, source.substr(start, pos - start))
+                    tokens.push(token(start, source.substr(start, pos - start)))
                 }
                 continue
             }
@@ -198,6 +198,9 @@ const ludwig = {
                 }
                 if (!ignoreComments) {
                     tokens.push(token(start, source.substr(start, pos - start)))
+                }
+                if (!ignoreWhitespace && source[pos] === '\n') {
+                    tokens.push(token(pos, '\n'))
                 }
                 line++
                 column = 0
