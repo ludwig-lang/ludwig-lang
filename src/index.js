@@ -199,9 +199,6 @@ const ludwig = {
                 if (!ignoreComments) {
                     tokens.push(token(start, source.substr(start, pos - start)))
                 }
-                if (source[pos] === '\n') {
-                    pos--
-                }
                 continue
             }
             if (c === '`') {
