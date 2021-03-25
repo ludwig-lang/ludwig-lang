@@ -199,11 +199,9 @@ const ludwig = {
                 if (!ignoreComments) {
                     tokens.push(token(start, source.substr(start, pos - start)))
                 }
-                if (!ignoreWhitespace && source[pos] === '\n') {
-                    tokens.push(token(pos, '\n'))
+                if (source[pos] === '\n') {
+                    pos--
                 }
-                line++
-                column = 0
                 continue
             }
             if (c === '`') {
