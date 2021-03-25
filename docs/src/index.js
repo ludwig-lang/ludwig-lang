@@ -2,14 +2,58 @@ import React, {useState} from 'react'
 import {MDXProvider} from '@mdx-js/react'
 import ReactDOM from 'react-dom';
 import './index.css'
+import Editor from 'react-simple-code-editor'
+import ludwig from 'ludwig-lang'
 /* eslint-disable */
 import Content from '!babel-loader!@mdx-js/loader!./index.md'
-import ludwig from 'ludwig-lang'
+
 
 const closeChars = new Map([
     ['`', '`'],
     ['[', ']']
 ]);
+
+const tokenType = value => {
+    switch (value) {
+        case '[':
+            return 'lb'
+        case ']':
+            return 'rb'
+        case '\\':
+            return 'lambda'
+        case '=':
+            return 'assignment'
+        default:
+            if (value.trim().length === 0) {
+                return 'ws'
+            }
+            if (value.startsWith('#')) {
+                return 'comment'
+            }
+            if (value.startsWith('`')) {
+                if (!value.endsWith('`') || value.length === 1) {
+                    return 'unterminated-string'
+                }
+                return 'string'
+            }
+            return 'symbol'
+
+    }
+}
+
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+const highlight = (source) => {
+    const tokens = ludwig.tokenize(source, false, false)
+    return tokens.map(t => `<span class="ludwig-${tokenType(t.value)}">${escapeHtml(t.value)}</span>`).join('')
+}
 
 function LudwigSnippet(props) {
     const [code, setCode] = useState(props.children.trim())
@@ -22,45 +66,38 @@ function LudwigSnippet(props) {
         return <pre>{code}</pre>
     }
 
-    const input = <textarea defaultValue={code}
-                            readOnly={!idle}
-                            style={{fontFamily: 'Monospace', width: '100%', resize: 'none'}}
-                            spellCheck={false}
-                            rows={(code.match(/[^\r\n]+/g) || []).length + 1}
-                            onChange={e => {
-                                setCode(e.target.value)
-                                const text = e.target
-                                const maxHeight = 400
-                                let adjustedHeight = text.clientHeight;
-                                if (!maxHeight || maxHeight > adjustedHeight) {
-                                    adjustedHeight = Math.max(text.scrollHeight, adjustedHeight);
-                                    if (maxHeight)
-                                        adjustedHeight = Math.min(text.scrollHeight, adjustedHeight);
-                                    if (adjustedHeight > text.clientHeight)
-                                        text.style.height = adjustedHeight + "px";
-                                }
-                            }}
-                            onKeyPress={e => {
-                                const pos = e.target.selectionStart;
-                                const val = [...e.target.value];
+    const input =
+        <Editor value={code}
+                readOnly={!idle}
+                onValueChange={setCode}
+                highlight={highlight}
+                onKeyPress={e => {
+                    const pos = e.target.selectionStart;
+                    const val = [...e.target.value];
 
-                                const char = e.key;
-                                const closeChar = closeChars.get(char);
+                    const char = e.key;
+                    const closeChar = closeChars.get(char);
 
-                                if (closeChar) {
-                                    val.splice(pos, 0, closeChar);
-                                    e.target.value = val.join('');
-                                    e.target.selectionEnd = pos;
-                                }
-                            }
-                            }
-    />
+                    if (closeChar) {
+                        val.splice(pos, 0, closeChar);
+                        e.target.value = val.join('');
+                        e.target.selectionEnd = pos;
+                    }
+                }
+                }
+        />
 
     const output = results && <textarea readOnly
-                                   rows={Math.min(results.match(/[^\r\n]+/g).length + 1, 20)}
-                                   cols="80"
-                                   style={{fontFamily: 'Monospace', resize: 'none', width: '100%', 'background-color': 'black', color: 'white'}}
-                                   value={results}/>
+                                        rows={Math.min(results.match(/[^\r\n]+/g).length + 1, 20)}
+                                        cols="80"
+                                        style={{
+                                            fontFamily: 'Monospace',
+                                            resize: 'none',
+                                            width: '100%',
+                                            'background-color': 'black',
+                                            color: 'white'
+                                        }}
+                                        value={results}/>
 
     function execute() {
         let output = ''

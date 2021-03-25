@@ -1,3 +1,23 @@
+.ludwig-lambda {
+  color: #005cc5;
+}
+
+.ludwig-assignment {
+  color: darkred;
+}
+
+.ludwig-comment {
+  color: darkcyan;
+}
+
+.ludwig-string {
+  color: chocolate;
+}
+
+.ludwig-unterminated-string {
+  color: red;
+}
+
 .octicon {
   display: inline-block;
   fill: currentColor;
