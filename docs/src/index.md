@@ -113,7 +113,7 @@ Each expression in the body can be a symbol, a string literal, an assignment, a 
 
 Finally, we call the newly defined function, passing `World` as an argument.
 
-Congratulations! At this point I've learned Ludwig's syntax in full.
+Congratulations! At this point You've learned Ludwig's syntax in full.
 The example above contains all the possible Ludwig syntax constructs.
 Yes, again: this is everything you need to know:
 - whitespace doesn't matter 
