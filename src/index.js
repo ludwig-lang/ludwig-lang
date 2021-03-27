@@ -59,7 +59,7 @@ function parseExpression(tokens, pos, filename) {
             expect(']', filename, newpos, tokens)
             return [newpos + 1, env => {
                 if (Object.prototype.hasOwnProperty.call(env, lhs)) {
-                    error(filename, tokens[pos].line, tokens[pos].column, `Runtime error: symbol ${lhs} has been already defined`)
+                    error(filename, tokens[pos].line, tokens[pos].column, `Symbol ${lhs} has been already defined`)
                 }
                 const value = rhs(env)
                 env[lhs] = value

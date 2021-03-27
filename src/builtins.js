@@ -23,6 +23,18 @@ const generator = (obj) => callableObject(consumer => {
     }
 }, obj)
 
+const errorWrapper = e => key => {
+    switch (key) {
+        case 'message':
+        case 'file':
+        case 'line':
+        case 'column':
+            return e[key]
+        default:
+            throw Error('Invalid argument')
+    }
+}
+
 const builtins = {
     '+': (x, y) => number(x) + number(y),
     '-': (x, y) => number(x) - number(y),
@@ -204,6 +216,20 @@ const builtins = {
             const forceSync = require('sync-rpc')
             const syncPrompt = forceSync(require.resolve('./prompt'))
             return syncPrompt(question)
+        }
+    },
+    'catch': tailcall(2, args => {
+        try {
+            return args[0]()
+        } catch (e) {
+            return [args[1], [errorWrapper(e)]]
+        }
+    }),
+    'finally': (body, finalizer) => {
+        try {
+            return body()
+        } finally {
+            finalizer()
         }
     }
 }
