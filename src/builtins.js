@@ -3,6 +3,7 @@ const immutable = require('immutable')
 const tailcall = require('./tailcall')
 const ordered = require('./ordered')
 const {isBrowser, isNode} = require("browser-or-node");
+const safety = require('./safetty')
 
 function number(x) {
     if (typeof x == 'number') {
@@ -101,6 +102,7 @@ const builtins = {
     'fun?': x => typeof x === 'function',
     ',': (...args) => generator(immutable.List(args)),
     'print': x => {
+        safety.unsafe()
         if (isNode) {
             process.stdout.write(x + '')
         } else {
@@ -108,7 +110,12 @@ const builtins = {
         }
     },
     'var': x => {
+        const gen = safety.generation()
+
         const setter = value => {
+            if (gen < safety.generation()) {
+                safety.unsafe()
+            }
             return x = value
         }
         const result = m => {
@@ -231,7 +238,8 @@ const builtins = {
         } finally {
             finalizer()
         }
-    }
+    },
+    'safely': body => safety.safely(body)
 }
 builtins.__proto__ = null
 builtins[','].variadic = true
