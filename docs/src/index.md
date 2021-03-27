@@ -588,15 +588,14 @@ We can also hide the mutable state from direct modification (encapsulate it):
 [animals [\[a] [[a `say`]]]]
 ```
 
-### Lazy evaluation
-
+### Memoization
 ```
-[= value [lazy [\[]
-  [println `Calculating...`]
-  `A result of a very expensive calculation`
+[= fib [memoize [\[n]
+  [if [< n two]
+    [\[] one]
+    [\[] [+ [fib [- n two]] [fib [- n one]]]]
+  ]
 ]]]
 
-# Prints "Calculating..." only once
-[println [value]]
-[println [value]]
+[fib [num `100`]]
 ```

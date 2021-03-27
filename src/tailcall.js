@@ -1,8 +1,6 @@
 const LudwigError = require("./LudwigError");
 
-function args(length) {
-    return Array.from({length}, (_, i) => `_${i}` )
-}
+const args = length => Array.from({length}, (_, i) => `_${i}` )
 
 class TailCallable extends Function {
     constructor(argCount, tc) {

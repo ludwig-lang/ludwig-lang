@@ -4,6 +4,7 @@ const tailcall = require('./tailcall')
 const ordered = require('./ordered')
 const {isBrowser, isNode} = require("browser-or-node");
 const safety = require('./safetty')
+const memoize = require('./memoize')
 
 function number(x) {
     if (typeof x == 'number') {
@@ -227,7 +228,8 @@ const builtins = {
     },
     'catch': tailcall(2, args => {
         try {
-            return args[0]()
+            const result = args[0]()
+            return [() => result, []]
         } catch (e) {
             return [args[1], [errorWrapper(e)]]
         }
@@ -239,7 +241,8 @@ const builtins = {
             finalizer()
         }
     },
-    'safely': body => safety.safely(body)
+    'safely': body => safety.safely(body),
+    'memoize': memoize
 }
 builtins.__proto__ = null
 builtins[','].variadic = true

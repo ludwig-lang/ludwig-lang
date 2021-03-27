@@ -122,17 +122,8 @@ function parseExpression(tokens, pos, filename) {
         expect(']', filename, newpos, tokens)
         const line = t.line
         const column = t.column
-        return [newpos + 1, tailcall(1, params => {
-            const env = params[0]
-            try {
-                return [head(env), args.map(a => a(env)), filename, line, column]
-            } catch (e) {
-                if (e instanceof LudwigError) {
-                    throw e
-                }
-                error(filename, line, column, `Runtime error: ${e.message}`, e)
-            }
-        })]
+        return [newpos + 1, tailcall(1, params =>
+            [head(params[0]), args.map(a => a(params[0])), filename, line, column])]
     }
     // symbol
     const symbol = t.value
