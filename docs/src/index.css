@@ -18,6 +18,42 @@
   color: red;
 }
 
+.ludwig-lb-1 {
+  color: olivedrab;
+}
+
+.ludwig-lb-2 {
+  color: mediumturquoise;
+}
+
+.ludwig-lb-3 {
+  color: hotpink;
+}
+
+.ludwig-lb-4 {
+  color: rebeccapurple;
+}
+
+.ludwig-rb-0 {
+  color: red;
+}
+
+.ludwig-rb-1 {
+  color: olivedrab;
+}
+
+.ludwig-rb-2 {
+  color: mediumturquoise;
+}
+
+.ludwig-rb-3 {
+  color: hotpink;
+}
+
+.ludwig-rb-4 {
+  color: rebeccapurple;
+}
+
 .octicon {
   display: inline-block;
   fill: currentColor;

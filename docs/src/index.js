@@ -41,18 +41,31 @@ const tokenType = value => {
     }
 }
 
-function escapeHtml(unsafe) {
-    return unsafe
+const escapeHtml= s => s
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
+        .replace(/'/g, "&#039;")
 
 const highlight = (source) => {
     const tokens = ludwig.tokenize(source, false, false)
-    return tokens.map(t => `<span class="ludwig-${tokenType(t.value)}">${escapeHtml(t.value)}</span>`).join('')
+    let level = 0
+    return tokens.map(t => {
+        let type = tokenType(t.value)
+        switch (type) {
+            case 'lb':
+                level++
+                type = 'lb-' + ((level - 1) % 4 + 1)
+                break
+            case 'rb':
+                type = 'rb-' + (level < 0 ? 0 : (level - 1) % 4 + 1)
+                level--
+                break
+        }
+        const s = `<span class="ludwig-${type}">${escapeHtml(t.value)}</span>`
+        return s
+    }).join('')
 }
 
 function LudwigSnippet(props) {
