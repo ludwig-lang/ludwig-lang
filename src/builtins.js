@@ -242,7 +242,10 @@ const builtins = {
         }
     },
     'safely': body => safety.safely(body),
-    'memoize': memoize
+    'memoize': memoize,
+    'inspect': symbol => {
+        throw Error('Illegal operation')
+    }
 }
 builtins.__proto__ = null
 builtins[','].variadic = true

@@ -122,8 +122,19 @@ function parseExpression(tokens, pos, filename) {
         expect(']', filename, newpos, tokens)
         const line = t.line
         const column = t.column
-        return [newpos + 1, tailcall(1, params =>
-            [head(params[0]), args.map(a => a(params[0])), filename, line, column])]
+        return [newpos + 1, tailcall(1, params =>  {
+            const f = head(params[0])
+            if (f === builtins.inspect) {
+                const env = params[0]
+                const symbol = args[0](env)
+                const result = env[symbol]
+                if (result === undefined) {
+                    throw Error(`Unknown symbol ${symbol}`)
+                }
+                return [() => result, []]
+            }
+            return [f, args.map(a => a(params[0])), filename, line, column]
+        })]
     }
     // symbol
     const symbol = t.value

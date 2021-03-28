@@ -58,4 +58,10 @@ module.exports = `
     ]
   ] 
 ]]
+[= export [\\[symbols]
+    [record [ \\[c] [symbols [\\[s]
+        [c s]
+        [c [inspect s]]
+    ]]]]
+]]
 `
