@@ -80,7 +80,8 @@ function LudwigSnippet(props) {
     }
 
     const input =
-        <Editor value={code}
+        <Editor className={'ludwig-editor'}
+                value={code}
                 readOnly={!idle}
                 onValueChange={setCode}
                 highlight={highlight}
@@ -100,16 +101,10 @@ function LudwigSnippet(props) {
                 }
         />
 
-    const output = results && <textarea readOnly
+    const output = results && <Editor className={'ludwig-output'}
+                                        readOnly
+                                        highlight={escapeHtml}
                                         rows={Math.min(results.match(/[^\r\n]+/g).length + 1, 20)}
-                                        cols="80"
-                                        style={{
-                                            fontFamily: 'Monospace',
-                                            resize: 'none',
-                                            width: '100%',
-                                            'background-color': 'black',
-                                            color: 'white'
-                                        }}
                                         value={results}/>
 
     function execute() {
@@ -139,8 +134,8 @@ function LudwigSnippet(props) {
     }
 
     return (
-        <p>
-            <div style={{position: 'relative'}}>
+        <div>
+            <div style={{position: 'relative',}}>
                 {input}
                 <button type="button" disabled={!idle} style={{position: 'absolute', right: '0px', top: '0px'}}
                         onClick={execute}>▶️Run️
@@ -148,7 +143,7 @@ function LudwigSnippet(props) {
             </div>
             {results && <p>{output}</p>}
             {error && <p style={{color: 'red'}}>{error}</p>}
-        </p>
+        </div>
     )
 }
 

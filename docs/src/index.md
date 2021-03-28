@@ -138,7 +138,7 @@ A function with an empty body always returns `null`:
 ```
 [= foo [\[]]]
 
-[foo]
+[print[foo]]
 ```
 
 ### Strings
