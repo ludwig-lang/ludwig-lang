@@ -64,8 +64,8 @@ const builtins = {
             case '-infinity':
                 return -Infinity
             default:
-                const result = parseFloat(s.replaceAll('_', ''))
-                if (Number.isNaN(result)) {
+                const result = JSON.parse(s.replaceAll('_', ''))
+                if (typeof result !== 'number') {
                     throw Error('Invalid number format')
                 }
                 return result
