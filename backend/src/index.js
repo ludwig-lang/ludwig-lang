@@ -1,10 +1,8 @@
 const ludwig = require('ludwig-lang-common')
-const builtins = require('ludwig-lang-common/builtins')
-const safety = require('ludwig-lang-common/safety')
 const syncRpc = require('sync-rpc')
+const fs = require('fs')
 
 require.extensions['.ludwig'] = (m, filename) => {
-    const fs = require('fs')
     const source = fs.readFileSync(filename, 'utf-8')
     const parent = module
     try {
@@ -15,12 +13,13 @@ require.extensions['.ludwig'] = (m, filename) => {
     }
 }
 
-builtins.load = modulePath => module.require(modulePath.endsWith('.ludwig') ? modulePath : (modulePath + '.ludwig'))
-builtins.print = x => {
-    safety.unsafe()
+ludwig.builtins.load = modulePath => module.require(modulePath.endsWith('.ludwig') ? modulePath : (modulePath + '.ludwig'))
+ludwig.builtins.print = x => {
+    ludwig.safety.unsafe()
     process.stdout.write(x + '')
 }
-builtins.prompt = question => {
+ludwig.builtins.prompt = question => {
+    ludwig.safety.unsafe()
     const syncPrompt = syncRpc(require.resolve('./prompt'))
     return syncPrompt(question)
 }

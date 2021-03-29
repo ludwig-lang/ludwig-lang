@@ -1,6 +1,7 @@
 const Result = require('./result')
 const builtins = require('./builtins')
 const stdlib = require('./stdlib')
+safety = require('./safety')
 const tailcall = require('./tailcall')
 const LudwigError = require("./LudwigError");
 
@@ -159,6 +160,9 @@ function expect(token, filename, pos, tokens) {
 }
 
 const ludwig = {
+    builtins,
+    safety,
+
     loaded: new Map(),
 
     tokenize(source, ignoreComments, ignoreWhitespace = true) {

@@ -1,6 +1,6 @@
 {
   "name": "ludwig-lang-frontend",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "The Ludwig Programming Language",
   "homepage": "http://ludwig-lang.github.io/ludwig-lang/",
   "repository": "https://github.com/ludwig-lang/ludwig-lang",
@@ -19,7 +19,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "ludwig-lang-common": "^0.0.0",
+    "ludwig-lang-common": "^0.0.1",
     "sync-rpc": "^1.3.6"
   }
 }

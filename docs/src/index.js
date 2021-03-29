@@ -3,7 +3,7 @@ import {MDXProvider} from '@mdx-js/react'
 import ReactDOM from 'react-dom';
 import './index.css'
 import Editor from 'react-simple-code-editor'
-import ludwig from 'ludwig-lang'
+import ludwig from 'ludwig-lang-frontend'
 /* eslint-disable */
 import Content from '!babel-loader!@mdx-js/loader!./index.md'
 
