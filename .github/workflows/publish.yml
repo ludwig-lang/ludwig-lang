@@ -6,21 +6,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    # Setup .npmrc file to publish to npm
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout
+    - uses: actions/setup-node
       with:
-        node-version: '12.x'
+        node-version: '15.x'
         registry-url: 'https://registry.npmjs.org'
     - run: npm install
+      working-directory: ./common
     - run: npm publish
+      working-directory: ./common
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+    - name: Wait for NPM
+      run: sleep 15
+    - run: npm install
+      working-directory: ./backend
+    - run: npm publish
+      working-directory: ./backend
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - run: npm install
+      working-directory: ./frontend
+    - run: npm publish
+      working-directory: ./frontend
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     - name: Wait for NPM
       run: sleep 15
     - name: Install Packages
@@ -30,7 +40,7 @@ jobs:
       run: CI=false npm run build
       working-directory: ./docs
     - name: Deploy to gh-pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages
       with:
         deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         publish_dir: ./docs/build
