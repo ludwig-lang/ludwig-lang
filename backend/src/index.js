@@ -16,7 +16,7 @@ require.extensions['.ludwig'] = (m, filename) => {
 ludwig.builtins.load = modulePath => module.require(modulePath.endsWith('.ludwig') ? modulePath : (modulePath + '.ludwig'))
 ludwig.builtins.print = x => {
     ludwig.safety.unsafe()
-    process.stdout.write(x + '')
+    process.stdout.write(ludwig.builtins.str(x))
 }
 ludwig.builtins.prompt = question => {
     ludwig.safety.unsafe()
@@ -35,13 +35,7 @@ const repl = () => {
         try {
             const result = ludwig.eval(line, '', env)
             if (result !== undefined && result !== null) {
-                const savedToString = Function.prototype.toString
-                Function.prototype.toString = () => 'λ'
-                try {
-                    console.log(result + '');
-                } finally {
-                    Function.prototype.toString = savedToString
-                }
+                process.stdout.write(ludwig.builtins.str(result) + '\n')
             }
         } catch (e) {
             console.error(e)
