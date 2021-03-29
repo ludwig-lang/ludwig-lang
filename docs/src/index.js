@@ -126,6 +126,7 @@ function LudwigSnippet(props) {
                 const res = ludwig.eval(code, '', env)
                 setResults(output + ((res !== null && res !== undefined) ? str(res) : ''))
             } catch (e) {
+                console.error(e)
                 setError(e.message)
             } finally {
                 setIdle(true)
