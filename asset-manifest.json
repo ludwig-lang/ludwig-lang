@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/ludwig-lang/static/css/main.196eed0d.chunk.css",
-    "main.js": "/ludwig-lang/static/js/main.c0329788.chunk.js",
-    "main.js.map": "/ludwig-lang/static/js/main.c0329788.chunk.js.map",
+    "main.js": "/ludwig-lang/static/js/main.f517c263.chunk.js",
+    "main.js.map": "/ludwig-lang/static/js/main.f517c263.chunk.js.map",
     "runtime-main.js": "/ludwig-lang/static/js/runtime-main.ce7fdb47.js",
     "runtime-main.js.map": "/ludwig-lang/static/js/runtime-main.ce7fdb47.js.map",
-    "static/js/2.f3798118.chunk.js": "/ludwig-lang/static/js/2.f3798118.chunk.js",
-    "static/js/2.f3798118.chunk.js.map": "/ludwig-lang/static/js/2.f3798118.chunk.js.map",
+    "static/js/2.1f1e5a4d.chunk.js": "/ludwig-lang/static/js/2.1f1e5a4d.chunk.js",
+    "static/js/2.1f1e5a4d.chunk.js.map": "/ludwig-lang/static/js/2.1f1e5a4d.chunk.js.map",
     "index.html": "/ludwig-lang/index.html",
     "static/css/main.196eed0d.chunk.css.map": "/ludwig-lang/static/css/main.196eed0d.chunk.css.map",
-    "static/js/2.f3798118.chunk.js.LICENSE.txt": "/ludwig-lang/static/js/2.f3798118.chunk.js.LICENSE.txt"
+    "static/js/2.1f1e5a4d.chunk.js.LICENSE.txt": "/ludwig-lang/static/js/2.1f1e5a4d.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.ce7fdb47.js",
-    "static/js/2.f3798118.chunk.js",
+    "static/js/2.1f1e5a4d.chunk.js",
     "static/css/main.196eed0d.chunk.css",
-    "static/js/main.c0329788.chunk.js"
+    "static/js/main.f517c263.chunk.js"
   ]
 }
