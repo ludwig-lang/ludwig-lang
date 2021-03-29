@@ -13,17 +13,14 @@ function number(x) {
     throw Error('Expected a number')
 }
 
-const callableObject = (func, obj) => {
-    Object.assign(func, obj)
-    Object.setPrototypeOf(func, Object.getPrototypeOf(obj))
-    return func
-}
-
-const generator = (obj) => callableObject(consumer => {
-    for (let x of obj) {
-        consumer(x)
+const generator = (obj) => {
+    const gen = consumer => {
+        for (let x of obj) {
+            consumer(x)
+        }
     }
-}, obj)
+    gen.obj = obj
+}
 
 const errorWrapper = e => key => {
     switch (key) {
@@ -138,7 +135,7 @@ const builtins = {
     'length': s => s.length,
     'substring': (s, from, length) => s.substr(from, length),
     'record': gen => {
-        if (gen instanceof immutable.Map) {
+        if (gen.obj instanceof immutable.Map) {
             return gen
         }
         let m = immutable.Map()
@@ -152,10 +149,12 @@ const builtins = {
             }
             isKey = !isKey
         })
-        return callableObject(key => m.get(key), m)
+        const fun = key => m.get(key)
+        fun.obj = m
+        return fun
     },
     'list': gen => {
-        if (gen instanceof immutable.List) {
+        if (gen.obj instanceof immutable.List) {
             return gen
         }
         let items = immutable.List()
@@ -165,7 +164,7 @@ const builtins = {
         return generator(items)
     },
     'set': gen => {
-        if (gen instanceof immutable.Set) {
+        if (gen.obj instanceof immutable.Set) {
             return gen
         }
         let set = immutable.Set()
@@ -174,8 +173,8 @@ const builtins = {
         })
         return generator(set)
     },
-    'union': (a, b) => generator(builtins.set(a).union(builtins.set(b))),
-    'intersect': (a, b) => generator(builtins.set(a).intersect(builtins.set(b))),
+    'union': (a, b) => generator(builtins.set(a).obj.union(builtins.set(b).obj)),
+    'intersect': (a, b) => generator(builtins.set(a).obj.intersect(builtins.set(b).obj)),
     'size': gen => {
         if ('size' in gen) {
             return gen.size
@@ -185,8 +184,8 @@ const builtins = {
         return n
     },
     'at': (i, gen) => {
-        if (gen instanceof immutable.List) {
-            return gen.get(i)
+        if (gen.obj instanceof immutable.List) {
+            return gen.obj.get(i)
         }
         const tag = {}
         let j = 0
@@ -197,8 +196,8 @@ const builtins = {
         return result
     },
     'contains': (gen, item) => {
-        if (gen instanceof immutable.Collection) {
-            return gen.has(item)
+        if (gen.obj instanceof immutable.Collection) {
+            return gen.obj.has(item)
         }
         const tag = {}
         const result = gen(value => (value === item) && new Result(tag, true))
@@ -208,8 +207,8 @@ const builtins = {
         return false
     },
     'concat': (g1, g2) => {
-        if (g1 instanceof immutable.List && g2 instanceof immutable.List) {
-            return generator(g1.merge(g2))
+        if (g1.obj instanceof immutable.List && g2.obj instanceof immutable.List) {
+            return generator(g1.obj.merge(g2.obj))
         }
         return c => {
             g1(c)
