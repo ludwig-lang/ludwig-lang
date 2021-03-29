@@ -149,11 +149,9 @@ function LudwigSnippet(props) {
 }
 
 ReactDOM.render(
-    <div style={{width: '80%', margin: 'auto'}}>
-        <MDXProvider components={{code: LudwigSnippet}}>
-            <Content/>
-        </MDXProvider>
-    </div>
+    <MDXProvider components={{code: LudwigSnippet}}>
+        <Content/>
+    </MDXProvider>
     ,
     document.getElementById('root')
 );
