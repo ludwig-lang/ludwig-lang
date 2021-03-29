@@ -3,7 +3,6 @@ const builtins = require('./builtins')
 const stdlib = require('./stdlib')
 const tailcall = require('./tailcall')
 const LudwigError = require("./LudwigError");
-const {isNode} = require('browser-or-node')
 
 
 function error(file, line, column, message, cause = undefined) {
@@ -237,55 +236,5 @@ const ludwig = {
 }
 
 ludwig.eval(stdlib, 'stdlib', builtins)
-
-if (isNode) {
-    builtins.load = modulePath => module.require(modulePath.endsWith('.ludwig') ? modulePath : (modulePath + '.ludwig'))
-
-    require.extensions['.ludwig'] = (m, filename) => {
-        const fs = require('fs')
-        const source = fs.readFileSync(filename,'utf-8')
-        const parent = module
-        try {
-            module = m
-            m.exports = ludwig.eval(source, filename)
-        } finally {
-            module = parent
-        }
-    }
-}
-
-function repl() {
-    const env = ludwig.env()
-
-    while (true) {
-        const line = env.prompt('')
-        if (line === '') {
-            break
-        }
-        try {
-            const result = ludwig.eval(line, '', env)
-            if (result !== undefined && result !== null) {
-                const savedToString = Function.prototype.toString
-                Function.prototype.toString = () => 'λ'
-                try {
-                    console.log(result + '');
-                } finally {
-                    Function.prototype.toString = savedToString
-                }
-            }
-        } catch (e) {
-            console.error(e)
-        }
-    }
-}
-
-if (require.main === module) {
-    const args = process.argv.slice(2)
-    if (args.length) {
-        builtins.load(args[0])
-    } else {
-        repl();
-    }
-}
 
 module.exports = ludwig

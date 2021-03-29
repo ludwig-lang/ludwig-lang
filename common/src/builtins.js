@@ -2,8 +2,7 @@ const Result = require('./result')
 const immutable = require('immutable')
 const tailcall = require('./tailcall')
 const ordered = require('./ordered')
-const {isBrowser, isNode} = require("browser-or-node");
-const safety = require('./safetty')
+const safety = require('./safety')
 const memoize = require('./memoize')
 
 function number(x) {
@@ -20,6 +19,7 @@ const generator = (obj) => {
         }
     }
     gen.obj = obj
+    return gen
 }
 
 const errorWrapper = e => key => {
@@ -101,11 +101,7 @@ const builtins = {
     ',': (...args) => generator(immutable.List(args)),
     'print': x => {
         safety.unsafe()
-        if (isNode) {
-            process.stdout.write(x + '')
-        } else {
-            console.log(x)
-        }
+        console.log(x)
     },
     'var': x => {
         const gen = safety.generation()
@@ -216,15 +212,6 @@ const builtins = {
         }
     },
     'arity': f => (f === builtins[',']) ? null : f.length,
-    'prompt': question => {
-        if (isBrowser) {
-            return prompt(question)
-        } else {
-            const forceSync = require('sync-rpc')
-            const syncPrompt = forceSync(require.resolve('./prompt'))
-            return syncPrompt(question)
-        }
-    },
     'catch': tailcall(2, args => {
         try {
             const result = args[0]()
