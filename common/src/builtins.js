@@ -245,6 +245,16 @@ const builtins = {
     remove: (coll, index) => {
         return generator(immutable.remove(coll.obj, index))
     },
+    join: (separator, gen) => {
+        let s = ''
+        gen(x => {
+            if (s.length) {
+                s += separator
+            }
+            s += x
+        })
+        return s
+    }
 }
 builtins.__proto__ = null
 builtins[','].variadic = true
