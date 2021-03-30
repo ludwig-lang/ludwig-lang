@@ -38,7 +38,7 @@ const repl = () => {
                 process.stdout.write(ludwig.builtins.str(result) + '\n')
             }
         } catch (e) {
-            console.error(e)
+            console.error(e.message)
         }
     }
 }

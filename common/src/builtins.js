@@ -40,15 +40,16 @@ const builtins = {
     '*': (x, y) => number(x) * number(y),
     '/': (x, y) => number(x) / number(y),
     '^': (x, y) => number(x) ** number(y),
-    'mod': (x, y) => number(x) % number(y),
-    'div': (x, y) => Math.trunc(number(x) / number(y)),
+    mod: (x, y) => number(x) % number(y),
+    div: (x, y) => Math.trunc(number(x) / number(y)),
     '~': x => -number(x),
     '<=': ordered,
     '!': x => !x,
     '&': (x, y) => x & y,
     '|': (x, y) => x | y,
     'if': tailcall(3, args => args[0] ? [args[1], []] : [args[2], []]),
-    'num': s => {
+    num: s => {
+
         switch (s.toLowerCase()) {
             case 'nan':
                 return NaN
@@ -68,38 +69,41 @@ const builtins = {
                 return result
         }
     },
-    'str': x => {
+    str: x => {
         const savedToString = Function.prototype.toString
         try {
             Function.prototype.toString = () => 'λ'
+            if (x.obj) {
+                return x.obj.toString()
+            }
             return x + ''
         } finally {
             Function.prototype.toString = savedToString
         }
     },
-    'exp': Math.exp,
-    'log': Math.log,
-    'sin': Math.sin,
-    'cos': Math.cos,
-    'tan': Math.tan,
-    'asin': Math.asin,
-    'acos': Math.acos,
-    'atan': Math.atan,
-    'atan2': Math.atan2,
-    'floor': Math.floor,
-    'ceil': Math.ceil,
-    'sinh': Math.sinh,
-    'cosh': Math.cosh,
-    'tanh': Math.tanh,
-    'asinh': Math.asinh,
-    'acosh': Math.acosh,
-    'atanh': Math.atanh,
-    'sqrt': Math.sqrt,
+    exp: Math.exp,
+    log: Math.log,
+    sin: Math.sin,
+    cos: Math.cos,
+    tan: Math.tan,
+    asin: Math.asin,
+    acos: Math.acos,
+    atan: Math.atan,
+    atan2: Math.atan2,
+    floor: Math.floor,
+    ceil: Math.ceil,
+    sinh: Math.sinh,
+    cosh: Math.cosh,
+    tanh: Math.tanh,
+    asinh: Math.asinh,
+    acosh: Math.acosh,
+    atanh: Math.atanh,
+    sqrt: Math.sqrt,
     'num?': x => typeof x === 'number',
     'str?': x => typeof x === 'string',
     'fun?': x => typeof x === 'function',
     ',': (...args) => generator(immutable.List(args)),
-    'print': x => {
+    print: x => {
         safety.unsafe()
         console.log(x)
     },
@@ -128,9 +132,9 @@ const builtins = {
     'throw': msg => {
         throw Error(msg)
     },
-    'length': s => s.length,
-    'substring': (s, from, length) => s.substr(from, length),
-    'record': gen => {
+    length: s => s.length,
+    substring: (s, from, length) => s.substr(from, length),
+    record: gen => {
         if (gen.obj instanceof immutable.Map) {
             return gen
         }
@@ -149,7 +153,7 @@ const builtins = {
         fun.obj = m
         return fun
     },
-    'list': gen => {
+    list: gen => {
         if (gen.obj instanceof immutable.List) {
             return gen
         }
@@ -159,7 +163,7 @@ const builtins = {
         })
         return generator(items)
     },
-    'set': gen => {
+    set: gen => {
         if (gen.obj instanceof immutable.Set) {
             return gen
         }
@@ -169,9 +173,9 @@ const builtins = {
         })
         return generator(set)
     },
-    'union': (a, b) => generator(builtins.set(a).obj.union(builtins.set(b).obj)),
-    'intersect': (a, b) => generator(builtins.set(a).obj.intersect(builtins.set(b).obj)),
-    'size': gen => {
+    union: (a, b) => generator(builtins.set(a).obj.union(builtins.set(b).obj)),
+    intersect: (a, b) => generator(builtins.set(a).obj.intersect(builtins.set(b).obj)),
+    size: gen => {
         if ('size' in gen) {
             return gen.size
         }
@@ -179,7 +183,7 @@ const builtins = {
         gen(x => n++)
         return n
     },
-    'at': (i, gen) => {
+    at: (i, gen) => {
         if (gen.obj instanceof immutable.List) {
             return gen.obj.get(i)
         }
@@ -191,7 +195,7 @@ const builtins = {
         }
         return result
     },
-    'contains': (gen, item) => {
+    contains: (gen, item) => {
         if (gen.obj instanceof immutable.Collection) {
             return gen.obj.has(item)
         }
@@ -202,7 +206,7 @@ const builtins = {
         }
         return false
     },
-    'concat': (g1, g2) => {
+    concat: (g1, g2) => {
         if (g1.obj instanceof immutable.List && g2.obj instanceof immutable.List) {
             return generator(g1.obj.merge(g2.obj))
         }
@@ -211,7 +215,7 @@ const builtins = {
             g2(c)
         }
     },
-    'arity': f => (f === builtins[',']) ? null : f.length,
+    arity: f => (f === builtins[',']) ? null : f.length,
     'catch': tailcall(2, args => {
         try {
             const result = args[0]()
@@ -227,11 +231,20 @@ const builtins = {
             finalizer()
         }
     },
-    'safely': body => safety.safely(body),
-    'memoize': memoize,
-    'inspect': symbol => {
+    safely: body => safety.safely(body),
+    memoize: memoize,
+    inspect: symbol => {
         throw Error('Illegal operation')
-    }
+    },
+    insert: (coll, index, value) => {
+        return generator(list.obj.insert(index, value))
+    },
+    update: (coll, index, value) => {
+        return generator(immutable.update(coll.obj, index, value))
+    },
+    remove: (coll, index) => {
+        return generator(immutable.remove(coll.obj, index))
+    },
 }
 builtins.__proto__ = null
 builtins[','].variadic = true

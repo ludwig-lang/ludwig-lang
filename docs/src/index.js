@@ -110,7 +110,6 @@ function LudwigSnippet(props) {
     function execute() {
         let output = ''
         const env = ludwig.env()
-        const {str} = env
         env.println = x => {
             output += `${x}\n`
         }
@@ -124,7 +123,7 @@ function LudwigSnippet(props) {
         setTimeout(() => {
             try {
                 const res = ludwig.eval(code, '', env)
-                setResults(output + ((res !== null && res !== undefined) ? str(res) : ''))
+                setResults(output + ((res !== null && res !== undefined) ? env.str(res) : ''))
             } catch (e) {
                 console.error(e)
                 setError(e.message)
