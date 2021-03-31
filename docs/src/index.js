@@ -131,7 +131,7 @@ function LudwigSnippet(props) {
         let output = ''
         const env = ludwig.env()
         ludwig.builtins.print = x => {
-            output += x + ''
+            output += ludwig.builtins.str(x)
         }
         setResults('')
         setError('')

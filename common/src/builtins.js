@@ -102,7 +102,7 @@ const builtins = {
     ',': (...args) => generator(immutable.List(args)),
     print: x => {
         safety.unsafe()
-        console.log(x)
+        console.log(builtins.str(x))
     },
     'var': x => {
         const gen = safety.generation()

@@ -35,7 +35,7 @@ const repl = () => {
         try {
             const result = ludwig.eval(line, '', env)
             if (result !== undefined && result !== null) {
-                process.stdout.write(ludwig.builtins.str(result) + '\n')
+                ludwig.builtins.println(result)
             }
         } catch (e) {
             console.error(e.message)
