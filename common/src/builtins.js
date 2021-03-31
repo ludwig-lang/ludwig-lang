@@ -15,7 +15,10 @@ function number(x) {
 const generator = (obj) => {
     const gen = consumer => {
         for (let x of obj) {
-            consumer(x)
+            const r = consumer(x)
+            if (r instanceof Result) {
+                return r
+            }
         }
     }
     gen.obj = obj
