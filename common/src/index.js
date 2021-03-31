@@ -1,9 +1,10 @@
 const Result = require('./result')
 const builtins = require('./builtins')
 const stdlib = require('./stdlib')
-safety = require('./safety')
+const safety = require('./safety')
 const tailcall = require('./tailcall')
-const LudwigError = require("./LudwigError");
+const LudwigError = require("./LudwigError")
+const immutable = require('immutable')
 
 
 function error(file, line, column, message, cause = undefined) {
@@ -124,14 +125,16 @@ function parseExpression(tokens, pos, filename) {
         const column = t.column
         return [newpos + 1, tailcall(1, params =>  {
             const f = head(params[0])
-            if (f === builtins.inspect) {
+            if (f === builtins.export) {
                 const env = params[0]
-                const symbol = args[0](env)
-                const result = env[symbol]
-                if (result === undefined) {
-                    throw Error(`Unknown symbol ${symbol}`)
-                }
-                return [() => result, []]
+                const symbols = args[0](env)
+                let m = immutable.Map()
+                symbols(s => {
+                    m = m.set(s, env[s])
+                })
+                const fun = key => m.get(key)
+                fun.obj = m
+                return [() => fun, []]
             }
             return [f, args.map(a => a(params[0])), filename, line, column]
         })]

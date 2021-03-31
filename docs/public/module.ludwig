@@ -1,0 +1,5 @@
+[= hello [\ [name]
+  [println [join `` [, `Hello, ` name]]]
+]]
+
+[export [, `hello`]]

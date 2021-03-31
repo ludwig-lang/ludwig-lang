@@ -72,10 +72,7 @@ const builtins = {
     str: x => {
         const savedToString = Function.prototype.toString
         try {
-            Function.prototype.toString = () => 'λ'
-            if (x.obj) {
-                return x.obj.toString()
-            }
+            Function.prototype.toString = () => this.obj?.toString() ?? 'λ'
             return x + ''
         } finally {
             Function.prototype.toString = savedToString
@@ -233,7 +230,7 @@ const builtins = {
     },
     safely: body => safety.safely(body),
     memoize: memoize,
-    inspect: symbol => {
+    export: symbols => {
         throw Error('Illegal operation')
     },
     insert: (coll, index, value) => {

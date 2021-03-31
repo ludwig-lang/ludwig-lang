@@ -4,9 +4,29 @@ import ReactDOM from 'react-dom';
 import './index.css'
 import Editor from 'react-simple-code-editor'
 import ludwig from 'ludwig-lang-frontend'
+import fetch from 'sync-fetch'
+import path from 'path-browserify'
 /* eslint-disable */
 import Content from '!babel-loader!@mdx-js/loader!./index.md'
 
+
+let currentPath = '/ludwig-lang/'
+const loaded = new Map()
+ludwig.builtins.load = modulePath => {
+    const filename = path.normalize(path.join(currentPath, modulePath.endsWith('.ludwig') ? modulePath : (modulePath + '.ludwig')))
+    if (!loaded.has(filename)) {
+        const source = fetch(filename).text()
+        const savedPath = currentPath
+        currentPath = path.dirname(filename)
+        try {
+            loaded.set(filename, ludwig.eval(source, filename))
+        } finally {
+            currentPath = savedPath
+        }
+
+    }
+    return loaded.get(filename)
+}
 
 const closeChars = new Map([
     ['`', '`'],
@@ -110,10 +130,7 @@ function LudwigSnippet(props) {
     function execute() {
         let output = ''
         const env = ludwig.env()
-        env.println = x => {
-            output += `${x}\n`
-        }
-        env.print = x => {
+        ludwig.builtins.print = x => {
             output += x + ''
         }
         setResults('')
