@@ -75,7 +75,9 @@ const builtins = {
     str: x => {
         const savedToString = Function.prototype.toString
         try {
-            Function.prototype.toString = () => this.obj?.toString() ?? 'λ'
+            Function.prototype.toString = function () {
+                return this.obj?.toString() ?? 'λ'
+            }
             return x + ''
         } finally {
             Function.prototype.toString = savedToString
