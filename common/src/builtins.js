@@ -55,8 +55,9 @@ const builtins = {
     '&': (x, y) => x & y,
     '|': (x, y) => x | y,
     'if': tailcall(3, args => args[0] ? [args[1], []] : [args[2], []]),
+    'js-global': global || window,
+    'js-get': (obj, key) => obj[key],
     num: s => {
-
         switch (s.toLowerCase()) {
             case 'nan':
                 return NaN
@@ -87,24 +88,6 @@ const builtins = {
             Function.prototype.toString = savedToString
         }
     },
-    exp: Math.exp,
-    log: Math.log,
-    sin: Math.sin,
-    cos: Math.cos,
-    tan: Math.tan,
-    asin: Math.asin,
-    acos: Math.acos,
-    atan: Math.atan,
-    atan2: Math.atan2,
-    floor: Math.floor,
-    ceil: Math.ceil,
-    sinh: Math.sinh,
-    cosh: Math.cosh,
-    tanh: Math.tanh,
-    asinh: Math.asinh,
-    acosh: Math.acosh,
-    atanh: Math.atanh,
-    sqrt: Math.sqrt,
     'num?': x => typeof x === 'number',
     'str?': x => typeof x === 'string',
     'fun?': x => typeof x === 'function',
@@ -239,19 +222,13 @@ const builtins = {
         }
     },
     safely: body => safety.safely(body),
-    memoize: memoize,
+    memoize,
     export: symbols => {
         throw Error('Illegal operation')
     },
-    insert: (coll, index, value) => {
-        return generator(list.obj.insert(index, value))
-    },
-    update: (coll, index, value) => {
-        return generator(immutable.update(coll.obj, index, value))
-    },
-    remove: (coll, index) => {
-        return generator(immutable.remove(coll.obj, index))
-    },
+    insert: (coll, index, value) => generator(list.obj.insert(index, value)),
+    update: (coll, index, value) => generator(immutable.update(coll.obj, index, value)),
+    remove: (coll, index) => generator(immutable.remove(coll.obj, index)),
     join: (separator, gen) => {
         let s = ''
         gen(x => {
