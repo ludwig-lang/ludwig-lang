@@ -159,6 +159,7 @@ const builtins = {
         fun.obj = m
         return fun
     },
+    ksys: gen => generator(gen.obj.keys()),
     list: gen => {
         if (gen.obj instanceof immutable.List) {
             return gen
@@ -260,7 +261,8 @@ const builtins = {
             s += x
         })
         return s
-    }
+    },
+    apply: (f, args) => f(...builtins.list(args))
 }
 builtins.__proto__ = null
 builtins[','].variadic = true
