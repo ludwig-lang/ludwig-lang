@@ -25,17 +25,43 @@ ludwig.builtins.prompt = question => {
 }
 
 const repl = () => {
+    ludwig.builtins.println('Ludwig')
     const env = ludwig.env()
 
+    let source = ''
     while (true) {
         const line = env.prompt('')
-        if (line === '') {
+        source = source + '\n' + line
+        if (source === '\n') {
             break
         }
         try {
-            const result = ludwig.eval(line, '', env)
-            if (result !== undefined && result !== null) {
-                ludwig.builtins.println(result)
+            const tokens = ludwig.tokenize(source)
+            if(tokens.length) {
+                const last = tokens[tokens.length - 1].value
+                if (last.startsWith('`') && (last.length === 1 || !last.endsWith('`'))) {
+                    continue
+                }
+            }
+            const level = tokens.reduce((l, t) => {
+                switch (t.value) {
+                    case '[':
+                        return l + 1
+                    case ']':
+                        return l - 1
+                    default:
+                        return l
+                }
+            }, 0)
+            if (level <= 0) {
+                try {
+                    const result = ludwig.eval(source, '', env)
+                    if (result !== undefined && result !== null) {
+                        ludwig.builtins.println(result)
+                    }
+                } finally {
+                    source = ''
+                }
             }
         } catch (e) {
             console.error(e.message)
