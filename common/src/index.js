@@ -103,7 +103,7 @@ function parseExpression(tokens, pos, filename) {
                 for (let i = 0; i < body.length - 1; i++) {
                     let result = body[i](e)
                     if (result instanceof Result) {
-                        return result
+                        return [() => result, []]
                     }
                 }
 

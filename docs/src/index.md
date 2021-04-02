@@ -419,7 +419,7 @@ just one thing, throw an error:
 
 [= consumer [\[x]
   [println x]
-  [on [== x 1] [\[]
+  [on [== x one] [\[]
       [throw `I've had enough`]
   ]]
 ]]
@@ -664,3 +664,13 @@ We can also hide the mutable state from direct modification (encapsulate it):
 
 [fib [num `100`]]
 ```
+## The standard library
+### String functions
+### Mathematical functions
+### Generator functions
+### Basic IO
+### HTTP client
+### HTTP server
+### File IO
+### Modules
+### Metaprogramming
