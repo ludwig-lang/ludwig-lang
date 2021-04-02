@@ -2,9 +2,18 @@
 
 _For the clarity we are aiming at is indeed complete clarity. Ludwig Wittgenstein_
 
+- [Why Ludwig?](#why-ludwig)
+- [Getting started](#getting-started)
+- [Syntax and basic concepts](#syntax-and-basic-concepts)
+- [Standard library](#the-standard-library)
+- [The roadmap](#the-roadmap)
+- [FAQ](#faq)
+
+
 __All code samples in this document can be executed and edited directly in the browser.
 Please check out [an interactive version](https://ludwig-lang.github.io/ludwig-lang/) of this page.__
 
+## Why Ludwig?
 Ludwig is a high-level multi-paradigm dynamically-typed programming language 
 with a super-simple but human-friendly syntax. It's built upon a minimalistic set of basic concepts,
 but naturally expands _ad inifinitum_ like a seed becomes a tree.
@@ -41,30 +50,23 @@ The reference implementation of Ludwig interpreter is written in Java Script and
 Due to the simplicity of the language, implementation of an interpreter or a compiler in other languages including Ludwig itself
 should be an easy task. 
 
-Ludwig contains 0.00% syntax sugar. It means that some Ludwig constructs may look slightly more complex than their equivalents
-in other languages such as Python, JavaScript or LISP using various flavors of syntax sugar to provide
-shortcuts to common patterns. On the other hand, Ludwig programs can be much more compact and easier to understand than analogous programs written in
-such Baroque languages as Java. Just compare "Hello world" written in Ludwig
+## Getting started
 
-```ludwig
-[println `Hello, world`]
+The JavaScript implementation of Ludwig comes in three versions, one for back-end NodeJS development, one for front-end development,
+and , finally, one for cross-platform development. They can be added to your *npm* project using one of the following commands:
+```bash
+npm install ludwig-lang-backend
+``` 
+```bash
+npm install ludwig-lang-frontend
+``` 
+```bash
+npm install ludwig-lang-common
 ```
-with its Java equivalent:
-```java
-package com.example;
+The back-end and the front-end versions basically just extend the cross-platform version with platform-specific functions.
+The back-end version also provides an interpreter of *.ludwig files and an interactive REPL.
 
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("Hello, world");
-  }
-}
-```
-
-As with LISP's parentheses, some people may find ubiquitous square brackets in Ludwig code 
-annoying and distracting. With its extremely simple and regular (even comparing to Lisp's) syntax, Ludwig is a great 
-candidate for experiments with non-textual structural or projectional editing approaches. 
-
-## The syntax
+## Syntax and basic concepts
 
 I promise you, it will take you no longer than 5 minutes to learn the full syntax. Let's start with something very simple.
 
@@ -132,7 +134,7 @@ but all these features don't require any new syntax constructs.
 
 ### Null
 
-The constant `null` represents a special value signifying an absence of anu other value.
+The constant `null` represents a special value signifying an absence of any other value.
 
 A function with an empty body always returns `null`:
 ```
@@ -441,7 +443,7 @@ Some functions **taking** a generator as an argument, such as `first`, `at`, `ta
   [infinite consumer]
 ]]
 
-[at [num `100`] infinite]  # stops after the 100th iteration
+[at [num `99`] infinite]  # stops after the 100th iteration
 ```
 The `first` function effectively terminates the generator and can be used to implement equivalents to `return`, `break` and `continue`
 statements in other languages:
@@ -653,7 +655,80 @@ We can also hide the mutable state from direct modification (encapsulate it):
 
 [animals [\[a] [[a `say`]]]]
 ```
-### Memoization
+
+## The standard library
+### String functions
+`[length s]`
+
+`[substring s start length]`
+
+### Mathematical functions
+`[num? x]`
+
+`[~ a]` Numerical negation, same as `[- zero a]`
+
+`[+ a b]` Returns the sum of `a` and `b`
+
+`[* a b]` Returns the product of `a` and `b`
+
+`[- a b]`
+
+`[/ a b]`
+
+`[div a b]`
+
+`[mod a b]`
+
+### Logical functions
+
+`true`
+
+`false`
+
+`[bool? x]`
+
+`[! a]`
+
+`[if condition then else]`
+
+`[on condition action]`
+
+`[& a b]`
+
+`[| a b]`
+
+`[&& a b]`
+
+`[|| a b]`
+
+### Variables
+
+`[var initial-value]` Creates a new variable object and sets it to `initial-value`
+```
+[= x [var zero]]`
+``` 
+
+`[get v]`
+
+`[let v]`
+
+`[++ v]`
+
+`[-- v]`
+
+`[+= v delta]`
+
+`[-= v delta]`
+
+### Functions on functions
+
+`[fun? x]` Returns `true` if x is a function, `false` otherwise
+
+`[apply f args]`
+
+`[arity f]`
+
+`[memoize f]`
 ```
 [= fib [memoize [\[n]
   [if [< n two]
@@ -664,13 +739,106 @@ We can also hide the mutable state from direct modification (encapsulate it):
 
 [fib [num `100`]]
 ```
-## The standard library
-### String functions
-### Mathematical functions
+
+`[compose f g]`
+
+`[safely f]`
+
+### Error handling
+
+`[error message]`
+
+`[catch body on-error]`
+
+`[finally body finalizer]`
+
+`[throw error]`
+
 ### Generator functions
+
+`[map f gen]`
+
+`[filter predicate gen]`
+
+`[size gen]`
+
+`[first gen]`
+
+`[at n gen]`
+
+`[empty? gen]`
+
+`[take n gen]`
+
+`[skip n gen]`
+
+`[list gen]`
+
+`[set gen]`
+
+`[union a b]` Returns a union of two sets.
+
+`[intersection a b]`
+
+`[difference a b]`
+
+`[, ...]` Creates a materialized list. 
+
+`[join separator gen]`
+
+`[keys rec]`
+
+`[insert list index item]`
+
+`[update list index item]`
+
+`[remove coll index-or-key]`
+
 ### Basic IO
+`[print x]`
+
+`[println x]`
+
+`[prompt question]`
+
+### Testing
+`[assert condition]`
+
+`[test message body]`
+
 ### HTTP client
 ### HTTP server
 ### File IO
 ### Modules
+`[load module-path]`
+`[export symbols]`
 ### Metaprogramming
+## The roadmap
+## FAQ
+### Isn't Ludwig too verbose?
+
+Ludwig contains 0.00% syntax sugar. It means that some Ludwig constructs may look slightly more complex than their equivalents
+in other languages such as Python, JavaScript or LISP using various flavors of syntax sugar to provide
+shortcuts to common patterns. On the other hand, Ludwig programs can be much more compact and easier to understand than analogous programs written in
+such Baroque languages as Java. Just compare "Hello world" written in Ludwig
+
+```ludwig
+[println `Hello, world`]
+```
+with its Java equivalent:
+```java
+package com.example;
+
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("Hello, world");
+  }
+}
+```
+The Java version is not just much more verbose, to understand how it works, you first need to learn a number of concepts: 
+packages and classes, fields and methods (including static methods), visibility modifiers, the "void" type, arrays, 
+and the special "main" method and how Java passes command line arguments to it! And all this for the simplest "Hello, world!" primer!
+
+As with LISP's parentheses, some people may find ubiquitous square brackets in Ludwig code 
+annoying and distracting. With its extremely simple and regular (even comparing to Lisp's) syntax, Ludwig is a great 
+candidate for experiments with non-textual structural or projectional editing approaches. 
