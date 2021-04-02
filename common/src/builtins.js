@@ -1,7 +1,6 @@
 const Result = require('./result')
 const immutable = require('immutable')
 const tailcall = require('./tailcall')
-const ordered = require('./ordered')
 const safety = require('./safety')
 const memoize = require('./memoize')
 
@@ -46,7 +45,12 @@ const builtins = {
     mod: (x, y) => number(x) % number(y),
     div: (x, y) => Math.trunc(number(x) / number(y)),
     '~': x => -number(x),
-    '<=': ordered,
+    '<=':  (x, y) => {
+        if (typeof x === 'function') {
+            return x === y || x?.obj?.equals(y?.obj) || false
+        }
+        return x <= y
+    },
     '!': x => !x,
     '&': (x, y) => x & y,
     '|': (x, y) => x | y,
@@ -178,8 +182,8 @@ const builtins = {
     union: (a, b) => generator(builtins.set(a).obj.union(builtins.set(b).obj)),
     intersect: (a, b) => generator(builtins.set(a).obj.intersect(builtins.set(b).obj)),
     size: gen => {
-        if ('size' in gen) {
-            return gen.size
+        if (gen?.obj?.size) {
+            return gen.obj.size
         }
         let n = 0
         gen(x => n++)

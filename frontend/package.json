@@ -19,7 +19,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "ludwig-lang-common": "^0.0.9",
+    "ludwig-lang-common": "^0.0.10",
     "sync-rpc": "^1.3.6"
   }
 }

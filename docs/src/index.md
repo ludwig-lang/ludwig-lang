@@ -396,6 +396,64 @@ A generator that yields nothing:
 # Will print nothing
 [generator println]
 ```
+### Working with generators
+Of course,Ludwig generators support such functions as `size`, `filter`, `map`, `reduce`, etc.
+Some of them deserve a special mention.
+First of all, it's very easy to create an infinite generator. This means that calling `[size gen]` may never finish:
+```
+[= infinite [\[yield] 
+  [yield one] 
+  [infinite yield]
+]]
+[size infinite] # this will never finish
+```
+Normally, when you pass a consumer function to a generator, the generator will keep calling the function until **the generator**
+decides to stop. The consumer is in sense passive. What could the consumer do to terminate the generator? Basically,
+just one thing, throw an error:
+```
+[= generator [\[yield]
+  [yield zero]
+  [yield one]
+  [yield two]
+]]
+
+[= consumer [\[x]
+  [println x]
+  [on [== x 1] [\[]
+      [throw `I've had enough`]
+  ]]
+]]
+
+[catch [\[]
+    [generator consumer]
+  ]
+  [\[e]
+    [println `Terminated`]
+  ]
+]
+``` 
+Some functions **taking** a generator as an argument, such as `first`, `at`, `take` or `empty?` use this mechanism to terminate evaluation of the generator
+(in fact, instead of `throw` and `catch`, they use a more lightweight mechanism, but the idea remains the same):
+```
+[= x [var zero]]
+[= infinite [\[consumer]
+  [consumer [++ x]]
+  [infinite consumer]
+]]
+
+[at [num `100`] infinite]  # stops after the 100th iteration
+```
+The `first` function effectively terminates the generator and can be used to implement equivalents to `return`, `break` and `continue`
+statements in other languages:
+```
+[= sign [\[x]
+    [first [\[ret]
+       [on [< x zero] [\[] [ret [~ one]]]]
+       [on [> x zero] [\[] [ret one]]]
+       [ret zero]
+    ]]
+]]
+```
 ### Lists
 Lists are materialized generators which store values in memory instead of calculating them on every call.
 The easiest way to create a list is by using the list constructor function `,`.
@@ -409,7 +467,6 @@ It accepts an arbitrary number of arguments and returns a generator yielding tho
 [println [at two items]]
 [items println]
 ```
-
 An empty list:
 ```
 [,]
@@ -428,12 +485,12 @@ Any finite fluent (non-materialized) generator can be converted into a list usin
 items
 ```
 
-Be careful, if you call `list` on an infinite generator, your application will crash with out of memory error!
+Be careful, if you call `list` on an infinite generator, your application will crash with an "out of memory" error!
 
 Again, lists are generators, are "normal" functions. However, list-backed generators have a number of distinctive properties:
 - `[size gen]` and  `[at index gen]` require constant time, O(1).
-- lists have nice string representations, e.g. `[ 1, 2, 3 ]`
-- lists are implemented using persistent data structures, meaning that such operations as addition or deletion of list elemnts
+- lists have nice string representations, e.g. `List [ 1, 2, 3 ]`
+- lists are implemented using persistent data structures, meaning that such operations as addition or deletion of list elements
 involve only limited copying 
 
 
@@ -507,6 +564,15 @@ If you're going to create more "points" you can create a new function for that:
 
 [= p [point zero one]]
 ```
+Or even a shorter one using the `export` function, which takes a list of variable names, resolves them and produces
+a record:
+```
+[= point [\[x y]
+  [export [, `x` `y`]]
+]]
+
+[= p [point zero one]]
+```
 Wait, it looks as if we've just declared a new type, `point` and then created an instance of that type!
 Let's make our point class ~~movable~~ mutable:
 ```
@@ -564,7 +630,7 @@ We can also hide the mutable state from direct modification (encapsulate it):
 [[p `move`] [num `3`] [num `4`]]
 [println [[p `dist`]]]
 ```
-
+### Polymorphism 
 ```
 [= dog [\[name] [record [,
   `say` [\[] 
@@ -587,7 +653,6 @@ We can also hide the mutable state from direct modification (encapsulate it):
 
 [animals [\[a] [[a `say`]]]]
 ```
-
 ### Memoization
 ```
 [= fib [memoize [\[n]
