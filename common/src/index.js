@@ -74,10 +74,10 @@ function parseExpression(tokens, pos, filename) {
             let newpos = pos + 2
             while (newpos < tokens.length && tokens[newpos].value !== ']') {
                 const arg = tokens[newpos].value
-                if (args.contains(arg)) {
+                if (args.includes(arg)) {
                     error(filename, tokens[newpos].line, tokens[newpos].column, `Duplicate argument name: '${arg}'`)
                 }
-                if (['=', '\\', '[', ']'].contains(arg) || arg.startsWith('`')) {
+                if (['=', '\\', '[', ']'].includes(arg) || arg.startsWith('`')) {
                     error(filename, tokens[newpos].line, tokens[newpos].column, `Illegal argument name: '${arg}'`)
                 }
                 args.push(arg)
