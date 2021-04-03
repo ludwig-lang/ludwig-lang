@@ -125,4 +125,7 @@ module.exports = `
 [= lowercase [\\ [s]
   [js-call s \`toLowerCase\` [,]]
 ]]
+[= substring [\\ [s from length]
+  [js-call s \`substr\` [, from length]]
+]]
 `

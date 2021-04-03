@@ -141,7 +141,6 @@ const builtins = {
     'throw': msg => {
         throw Error(msg)
     },
-    substring: (s, from, length) => s.substr(from, length),
     record: gen => {
         if (gen.obj instanceof immutable.Map) {
             return gen
