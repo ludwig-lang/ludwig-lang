@@ -31,8 +31,8 @@ const repl = () => {
     let source = ''
     while (true) {
         const line = env.prompt('')
-        source = source + '\n' + line
-        if (source === '\n') {
+        source = (source ? (source + '\n') : '') + line
+        if (!source) {
             break
         }
         try {

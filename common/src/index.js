@@ -166,26 +166,28 @@ const ludwig = {
     builtins,
     safety,
 
-    loaded: new Map(),
-
     tokenize(source, ignoreComments, ignoreWhitespace = true) {
         const tokens = []
-        let line = 1
-        let column = 0
         let pos = 0
 
         function token(pos, value) {
+            // TODO: Get rid of O(n^2)
+            let line = 1
+            let column = 0
+            for (let i = 0; i <= pos; i++) {
+                if (source[i] === '\n') {
+                    line++
+                    column = 0
+                } else {
+                    column++
+                }
+            }
             return {pos, line, column, value}
         }
 
         while (pos < source.length) {
             let c = source[pos++]
-            column++
             if (c.trim() === '') {
-                if (c === '\n') {
-                    line++
-                    column = 0
-                }
                 if (!ignoreWhitespace) {
                     const start = pos - 1
                     while (pos < source.length && source[pos].trim() === '') {
@@ -215,7 +217,6 @@ const ludwig = {
                     pos++
                 }
                 tokens.push(token(start, source.substr(start, pos - start + 1)))
-                column += pos - start
                 pos++
                 continue
             }
