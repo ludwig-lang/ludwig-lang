@@ -2,16 +2,9 @@
 
 _For the clarity we are aiming at is indeed complete clarity. Ludwig Wittgenstein_
 
-- [Why Ludwig?](#why-ludwig)
-- [Getting started](#getting-started)
-- [Syntax and basic concepts](#syntax-and-basic-concepts)
-- [Standard library](#the-standard-library)
-- [The roadmap](#the-roadmap)
-- [FAQ](#faq)
 
-
-__All code samples in this document can be executed and edited directly in the browser.
-Please check out [an interactive version](https://ludwig-lang.github.io/ludwig-lang/) of this page.__
+> All code samples in this document can be executed and edited directly in the browser.
+> Please check out [an interactive version](https://ludwig-lang.github.io/ludwig-lang/) of this page.
 
 ## Why Ludwig?
 Ludwig is a high-level multi-paradigm dynamically-typed programming language 

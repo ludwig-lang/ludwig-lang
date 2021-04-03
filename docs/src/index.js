@@ -170,8 +170,12 @@ function LudwigSnippet(props) {
     )
 }
 
+function HiddenBlockquote(props) {
+    return null
+}
+
 ReactDOM.render(
-    <MDXProvider components={{code: LudwigSnippet}}>
+    <MDXProvider components={{code: LudwigSnippet, blockquote: HiddenBlockquote}}>
         <Content/>
     </MDXProvider>
     ,
