@@ -127,6 +127,12 @@ function LudwigSnippet(props) {
                                         rows={Math.min(results.match(/[^\r\n]+/g).length + 1, 20)}
                                         value={results}/>
 
+    const errorMessage = error && <Editor className={'ludwig-error'}
+                                          readOnly
+                                          highlight={escapeHtml}
+                                          rows={Math.min(error.match(/[^\r\n]+/g).length + 1, 20)}
+                                          value={error}/>
+
     function execute() {
         let output = ''
         const env = ludwig.env()
@@ -158,8 +164,8 @@ function LudwigSnippet(props) {
                         onClick={execute}>▶️Run️
                 </button>
             </div>
-            {results && <p>{output}</p>}
-            {error && <p style={{color: 'red'}}>{error}</p>}
+            {output}
+            {errorMessage}
         </div>
     )
 }

@@ -116,4 +116,13 @@ module.exports = `
 [= ceil [js-get [js-get js-global \`Math\`] \`ceil\`]]
 [= floor [js-get [js-get js-global \`Math\`] \`floor\`]]
 [= sqrt [js-get [js-get js-global \`Math\`] \`sqrt\`]]
+[= length [\\[s] 
+   [js-get s \`length\`]
+]]
+[= uppercase [\\ [s]
+  [js-call s \`toUpperCase\` [,]]
+]]
+[= lowercase [\\ [s]
+  [js-call s \`toLowerCase\` [,]]
+]]
 `

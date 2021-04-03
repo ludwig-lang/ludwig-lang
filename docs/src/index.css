@@ -14,6 +14,14 @@
   border: 10px solid black;
 }
 
+.ludwig-error {
+  font-family: Monospace;
+  resize: none;
+  background-color: black;
+  color: red;
+  border: 10px solid black;
+}
+
 .ludwig-lambda {
   color: #005cc5;
 }

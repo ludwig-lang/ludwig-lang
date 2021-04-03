@@ -47,7 +47,13 @@ const builtins = {
     '~': x => -number(x),
     '<=':  (x, y) => {
         if (typeof x === 'function') {
-            return x === y || x?.obj?.equals(y?.obj) || false
+            if (x === y) {
+                return true
+            }
+            if (x.obj && x.obj.equals) {
+                return x.obj.equals(y.obj)
+            }
+            return false
         }
         return x <= y
     },
@@ -57,14 +63,28 @@ const builtins = {
     'if': tailcall(3, args => args[0] ? [args[1], []] : [args[2], []]),
     'js-global': global || window,
     'js-get': (obj, key) => obj[key],
+    'js-unwrap': o => (o && o.obj) || o,
+    'js-wrap': obj => {
+        if (obj instanceof immutable.Map) {
+            const f = x => obj.get(x)
+            f.obj = obj
+            return f
+        }
+        if (obj instanceof immutable.Collection) {
+            return generator(obj)
+        }
+        return obj
+    },
+    'js-call': (obj, method, args) => obj[method](...builtins['js-unwrap'](args)),
     num: s => {
+        if (s.startsWith('+')) {
+            s = s.substr(1)
+        }
         switch (s.toLowerCase()) {
             case 'nan':
                 return NaN
             case 'inf':
-            case '+inf':
             case 'infinity':
-            case '+infinity':
                 return Infinity
             case '-inf':
             case '-infinity':
@@ -81,7 +101,7 @@ const builtins = {
         const savedToString = Function.prototype.toString
         try {
             Function.prototype.toString = function () {
-                return this.obj?.toString() ?? 'λ'
+                return this.obj ? this.obj.toString() : 'λ'
             }
             return x + ''
         } finally {
@@ -121,7 +141,6 @@ const builtins = {
     'throw': msg => {
         throw Error(msg)
     },
-    length: s => s.length,
     substring: (s, from, length) => s.substr(from, length),
     record: gen => {
         if (gen.obj instanceof immutable.Map) {
@@ -166,7 +185,7 @@ const builtins = {
     union: (a, b) => generator(builtins.set(a).obj.union(builtins.set(b).obj)),
     intersect: (a, b) => generator(builtins.set(a).obj.intersect(builtins.set(b).obj)),
     size: gen => {
-        if (gen?.obj?.size) {
+        if (gen.obj) {
             return gen.obj.size
         }
         let n = 0
@@ -226,7 +245,7 @@ const builtins = {
     export: symbols => {
         throw Error('Illegal operation')
     },
-    insert: (coll, index, value) => generator(list.obj.insert(index, value)),
+    insert: (coll, index, value) => generator(coll.obj.insert(index, value)),
     update: (coll, index, value) => generator(immutable.update(coll.obj, index, value)),
     remove: (coll, index) => generator(immutable.remove(coll.obj, index)),
     join: (separator, gen) => {
