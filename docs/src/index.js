@@ -57,7 +57,6 @@ const tokenType = value => {
                 return 'string'
             }
             return 'symbol'
-
     }
 }
 
@@ -124,13 +123,13 @@ function LudwigSnippet(props) {
     const output = results && <Editor className={'ludwig-output'}
                                         readOnly
                                         highlight={escapeHtml}
-                                        rows={Math.min(results.match(/[^\r\n]+/g).length + 1, 20)}
+                                        rows={Math.min(results.match(/[^\r\n]+/g).length, 20)}
                                         value={results}/>
 
     const errorMessage = error && <Editor className={'ludwig-error'}
                                           readOnly
                                           highlight={escapeHtml}
-                                          rows={Math.min(error.match(/[^\r\n]+/g).length + 1, 20)}
+                                          rows={1}
                                           value={error}/>
 
     function execute() {
@@ -148,6 +147,9 @@ function LudwigSnippet(props) {
                 const res = ludwig.eval(code, '', env)
                 setResults(output + ((res !== null && res !== undefined) ? env.str(res) : ''))
             } catch (e) {
+                if (e instanceof ludwig.LudwigError) {
+                    console.error(e.cause)
+                }
                 console.error(e)
                 setError(e.message)
             } finally {

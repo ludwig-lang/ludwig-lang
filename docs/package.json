@@ -1,12 +1,12 @@
 {
   "name": "ludwig-lang-docs",
   "homepage": "http://ludwig-lang.github.io/ludwig-lang/",
-  "version": "0.1.53",
+  "version": "0.1.54",
   "private": true,
   "dependencies": {
     "@mdx-js/loader": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
-    "ludwig-lang-frontend": "^0.0.18",
+    "ludwig-lang-frontend": "^0.0.19",
     "markdown-styles": "^3.2.0",
     "path-browserify": "^0.0.1",
     "react": "^16.0.0",

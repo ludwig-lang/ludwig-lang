@@ -240,7 +240,9 @@ const ludwig = {
 
     eval(source, filename = 'code', env = this.env()) {
         return this.parse(source, filename)(env)
-    }
+    },
+
+    LudwigError
 }
 
 ludwig.eval(stdlib, 'stdlib', builtins)
