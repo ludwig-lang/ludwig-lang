@@ -128,4 +128,17 @@ module.exports = `
 [= substring [\\ [s from length]
   [js-call s \`substr\` [, from length]]
 ]]
+[= sort [\\ [order coll]
+    [= c [\\[a b]
+      [if [order a b]
+        [\\[] [~ one]]
+        [\\[][if [order b a]
+          [\\[] one]
+          [\\[] zero]
+        ]]
+      ]
+    ]]
+    
+    [js-wrap [js-call [js-unwrap coll] \`sort\` [, c]]]
+]]
 `
