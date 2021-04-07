@@ -1,0 +1,59 @@
+[skip-test `Test skip-test :)` [\[]
+  [assert false]
+]]
+
+[test `Throw` [\ []
+    [assert-fail [\[] [throw `error`]]]
+]]
+
+[test `Undefined` [\[]
+    [assert-fail [\[] undefined-variable]]
+]]
+
+[test `Double binding` [\[]
+    [assert-fail [\[] [= a one] [= a two]]]
+]]
+
+[test `Variables` [\[]
+  [= v [var zero]]
+  [assert [== zero [get v]]]
+  [let v one]
+  [assert [== one [get v]]]
+]]
+
+[test `List constructor` [\ []
+   [= a [, `a` `b` `c`]]
+   [assert [== [num `3`] [size a]]]
+   [assert [== `a` [at zero a]]]
+   [assert [== `b` [at one a]]]
+   [assert [== `c` [at two a]]]
+   [assert-fail [\[] [at [num `-1`] a]]]
+   [assert-fail [\[] [at [num `3`] a]]]
+   [assert [== a [, `a` `b` `c`]]]
+   [assert [== a [list a]]]
+   [assert [contains a `a`]]
+   [assert [![contains a `A`]]]
+]]
+
+[test `Range constructor` [\ []
+   [= a [range zero two]]
+   [assert [== two [size a]]]
+   [assert [== zero [at zero a]]]
+   [assert [== one [at one a]]]
+   [assert [== [, zero one] [list a]]]
+]]
+
+[test `size of a generic generator` [\[]
+  [assert [== zero
+              [size [\[yield]]]
+  ]]
+  [assert [== one
+              [size [\[yield] [yield `a`]]]
+  ]]
+  [assert [== two
+              [size [\[yield] [yield `a`] [yield `b`]]]
+  ]]
+]]
+
+
+[get failed-tests]

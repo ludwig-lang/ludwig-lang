@@ -3,6 +3,7 @@ const immutable = require('immutable')
 const tailcall = require('./tailcall')
 const safety = require('./safety')
 const memoize = require('./memoize')
+const packageJson = require('../package.json')
 
 function number(x) {
     if (typeof x == 'number') {
@@ -37,6 +38,7 @@ const errorWrapper = e => key => {
 }
 
 const builtins = {
+    'language-version': packageJson.version,
     '+': (x, y) => number(x) + number(y),
     '-': (x, y) => number(x) - number(y),
     '*': (x, y) => number(x) * number(y),
@@ -193,7 +195,11 @@ const builtins = {
         return n
     },
     at: (i, gen) => {
+        number(i)
         if (gen.obj instanceof immutable.List) {
+            if (i < 0 || i >= gen.obj.size) {
+                throw Error('Index out of bounds')
+            }
             return gen.obj.get(i)
         }
         const tag = {}
@@ -202,11 +208,11 @@ const builtins = {
         if (result instanceof Result && result.tag === tag) {
             return result.value
         }
-        return result
+        throw Error('Index out of bounds')
     },
     contains: (gen, item) => {
         if (gen.obj instanceof immutable.Collection) {
-            return gen.obj.has(item)
+            return gen.obj.includes(item)
         }
         const tag = {}
         const result = gen(value => (value === item) && new Result(tag, true))

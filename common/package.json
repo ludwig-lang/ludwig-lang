@@ -1,6 +1,6 @@
 {
   "name": "ludwig-lang-common",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "The Ludwig Programming Language",
   "homepage": "http://ludwig-lang.github.io/ludwig-lang/",
   "repository": "https://github.com/ludwig-lang/ludwig-lang",
@@ -20,5 +20,11 @@
   "license": "MIT",
   "dependencies": {
     "immutable": "^4.0.0-rc.12"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node ./src/test/test.js"
   }
 }

@@ -25,7 +25,7 @@ ludwig.builtins.prompt = question => {
 }
 
 const repl = () => {
-    ludwig.builtins.println('Ludwig')
+    ludwig.builtins.println(`Ludwig v${ludwig.builtins['language-version']}`)
     const env = ludwig.env()
 
     let source = ''
