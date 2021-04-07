@@ -75,10 +75,10 @@ const highlight = (source) => {
         switch (type) {
             case 'lb':
                 level++
-                type = 'lb-' + ((level - 1) % 4 + 1)
+                type = 'lb-' + ((level - 1) % 9 + 1)
                 break
             case 'rb':
-                type = 'rb-' + (level < 0 ? 0 : (level - 1) % 4 + 1)
+                type = 'rb-' + (level < 0 ? 0 : (level - 1) % 9 + 1)
                 level--
                 break
         }

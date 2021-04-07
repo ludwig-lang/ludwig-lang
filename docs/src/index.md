@@ -301,7 +301,7 @@ While it's possible to create other high-level mutable objects **using** *var* o
 allowing for mutability.
 A variable object can be created using `[var initial-value]` function.
 ```
-[= x [var zero]]
+[= x [var one]]
 ```
 
 The value of a variable can be retrieved using `let` function and modified using `set`:

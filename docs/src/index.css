@@ -43,19 +43,39 @@
 }
 
 .ludwig-lb-1 {
-  color: olivedrab;
+  color: hsl(0, 50%, 50%);
 }
 
 .ludwig-lb-2 {
-  color: mediumturquoise;
+  color: hsl(40, 50%, 50%);
 }
 
 .ludwig-lb-3 {
-  color: hotpink;
+  color: hsl(80, 50%, 50%);
 }
 
 .ludwig-lb-4 {
-  color: rebeccapurple;
+  color: hsl(120, 50%, 50%);
+}
+
+.ludwig-lb-5 {
+  color: hsl(160, 50%, 50%);
+}
+
+.ludwig-lb-6 {
+  color: hsl(200, 50%, 50%);
+}
+
+.ludwig-lb-7 {
+  color: hsl(240, 50%, 50%);
+}
+
+.ludwig-lb-8 {
+  color: hsl(280, 50%, 50%);
+}
+
+.ludwig-lb-9 {
+  color: hsl(320, 50%, 50%);
 }
 
 .ludwig-rb-0 {
@@ -63,19 +83,39 @@
 }
 
 .ludwig-rb-1 {
-  color: olivedrab;
+  color: hsl(0, 50%, 50%);
 }
 
 .ludwig-rb-2 {
-  color: mediumturquoise;
+  color: hsl(40, 50%, 50%);
 }
 
 .ludwig-rb-3 {
-  color: hotpink;
+  color: hsl(80, 50%, 50%);
 }
 
 .ludwig-rb-4 {
-  color: rebeccapurple;
+  color: hsl(120, 50%, 50%);
+}
+
+.ludwig-rb-5 {
+  color: hsl(160, 50%, 50%);
+}
+
+.ludwig-rb-6 {
+  color: hsl(200, 50%, 50%);
+}
+
+.ludwig-rb-7 {
+  color: hsl(240, 50%, 50%);
+}
+
+.ludwig-rb-8 {
+  color: hsl(280, 50%, 50%);
+}
+
+.ludwig-rb-9 {
+  color: hsl(320, 50%, 50%);
 }
 
 /*

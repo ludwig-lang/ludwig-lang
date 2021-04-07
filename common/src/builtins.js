@@ -160,7 +160,7 @@ const builtins = {
         fun.obj = m
         return fun
     },
-    ksys: gen => generator(gen.obj.keys()),
+    keys: gen => generator(gen.obj.keys()),
     list: gen => {
         if (gen.obj instanceof immutable.List) {
             return gen
@@ -181,6 +181,7 @@ const builtins = {
         })
         return generator(set)
     },
+    range: (start, end) => generator(immutable.Range(start, end)),
     union: (a, b) => generator(builtins.set(a).obj.union(builtins.set(b).obj)),
     intersect: (a, b) => generator(builtins.set(a).obj.intersect(builtins.set(b).obj)),
     size: gen => {
