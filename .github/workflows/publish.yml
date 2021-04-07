@@ -13,6 +13,8 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
     - run: npm install
       working-directory: ./common
+    - run: npm test
+      working-directory: ./common      
     - run: npm publish
       working-directory: ./common
       env:
