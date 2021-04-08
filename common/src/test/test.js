@@ -2,7 +2,8 @@ const ludwig = require('../index')
 const fs = require('fs')
 
 const source = fs.readFileSync(__dirname +'/test.ludwig', 'utf-8')
-const failed = ludwig.eval(source, 'tests')
+ludwig.eval(source, 'tests')
+const failed = ludwig.builtins['failed-tests']('get')
 if (failed) {
     console.error(`${failed} tests failed`)
 }

@@ -85,6 +85,7 @@ module.exports = `
     [\\[e] true]
   ]]
 ]]
+[= assert== [\\[expected value] [assert [== expected value]]]]
 [= failed-tests [var zero]]
 [= test [\\ [title body]
   [print title]

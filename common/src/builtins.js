@@ -127,8 +127,8 @@ const builtins = {
             }
             return x = value
         }
-        const result = m => {
-            switch (m) {
+        const result = key => {
+            switch (key) {
                 case 'get':
                     return x
                 case 'let':
@@ -144,25 +144,49 @@ const builtins = {
         throw Error(msg)
     },
     record: gen => {
-        if (gen.obj instanceof immutable.Map) {
-            return gen
-        }
         let m = immutable.Map()
         let isKey = true
         let key
         gen(x => {
             if (isKey) {
                 key = x
+                if (key.obj) {
+                    key = key.obj
+                }
             } else {
                 m = m.set(key, x)
             }
             isKey = !isKey
         })
-        const fun = key => m.get(key)
+        const fun = key => {
+            if (key.obj) {
+                key = key.obj
+            }
+            const value = m.get(key)
+            if (!value && !m.has(key)) {
+                throw Error('Unknown key')
+            }
+            return value
+        }
         fun.obj = m
         return fun
     },
-    keys: gen => generator(gen.obj.keys()),
+    'hash-map': gen => {
+        const get = builtins.record(gen)
+        const keys = generator(immutable.Set(get.obj.keySeq()))
+        const map = key => {
+            switch (key) {
+                case 'get':
+                    return get
+                case 'keys':
+                    return keys
+                default:
+                    throw Error('Illegal argument')
+            }
+        }
+        map.obj = get.obj
+        return map
+    },
     list: gen => {
         if (gen.obj instanceof immutable.List) {
             return gen
