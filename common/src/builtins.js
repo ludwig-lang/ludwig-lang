@@ -128,14 +128,13 @@ const builtins = {
             return x = value
         }
         const result = key => {
-            switch (key) {
-                case 'get':
-                    return x
-                case 'let':
-                    return setter
-                default:
-                    throw Error('Illegal argument')
+            if (key === builtins.get) {
+                return x
             }
+            if (key === builtins.let) {
+                return setter
+            }
+            throw Error('Illegal argument')
         }
         result.toString = () => `<${x}>`
         return result

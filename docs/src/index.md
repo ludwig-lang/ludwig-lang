@@ -569,6 +569,21 @@ a record:
 [= p [point zero one]]
 ```
 Wait, it looks as if we've just declared a new type, `point` and then created an instance of that type!
+This is not exactly true, Ludwig doesn't have a concept of classes, but it does support a certain form of object-oriented programming.
+
+## Object-oriented programming, the good part
+
+*"Objects are a poor man's closures."* Norman Adams
+
+Ludwig's `record` function provides an easy, but by no means the only way of creating functions (closures) which behave like objects without a need
+to introduce such new concepts as "classes", "constructors", "visibility levels", "fields" and "methods".
+Ludwig's closures can implement multiple behaviors (aka methods), 
+hiding the implementation details from the clients and can also have hidden internal state, mutable or immutable - you decide (encapsulation),
+and last not least, they allow you to create multiple implementations of the same protocol, or set of methods (polymorphism).
+The type system allows you to make your objects type-safe by defining by specifying which interfaces (protocols) they implement,
+without tying the latter behavioral contracts to any concrete implementation (a class).
+
+
 Let's make our point class ~~movable~~ mutable:
 ```
 [= point [\[x y]
@@ -601,6 +616,7 @@ Let's add a method:
 [let [p `y`] [num `4`]]
 [println [[p `dist`]]]
 ```
+### Encapsulation
 We can also hide the mutable state from direct modification (encapsulate it):
 ```
 [= point [\[x y]
@@ -648,6 +664,9 @@ We can also hide the mutable state from direct modification (encapsulate it):
 
 [animals [\[a] [[a `say`]]]]
 ```
+## Inheritance?
+
+## The type system 
 
 ## The standard library
 ### String functions

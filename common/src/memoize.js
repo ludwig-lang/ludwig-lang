@@ -1,15 +1,11 @@
 const immutable = require('immutable')
+const FunctionObject = require('./FunctionObject')
 
-const args = length => Array.from({length}, (_, i) => `_${i}` )
-
-class Memoized extends Function {
+class Memoized extends FunctionObject {
     constructor(fun) {
-        super(...args(fun.length), `return this.__self__.__call__([${args(fun.length)}])`)
-        const self = this.bind(this)
-        this.__self__ = self
-        self.__fun__ = fun
-        self.__cache__ = immutable.Map()
-        return self
+        super(fun.length)
+        this.__fun__ = fun
+        this.__cache__ = immutable.Map()
     }
 
     __call__(args) {

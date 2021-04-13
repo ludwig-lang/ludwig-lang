@@ -1,14 +1,11 @@
-const LudwigError = require("./LudwigError");
+const FunctionObject = require('./FunctionObject')
+const LudwigError = require('./LudwigError')
 
-const args = length => Array.from({length}, (_, i) => `_${i}` )
-
-class TailCallable extends Function {
+class TailCallable extends FunctionObject {
     constructor(argCount, tc) {
-        super(...args(argCount), `return this.__self__.__call__([${args(argCount)}])`)
-        const self = this.bind(this)
-        this.__self__ = self
-        self.__tail_call__ = tc
-        return self
+        super(argCount)
+
+        this.__tail_call__ = tc
     }
 
     __call__(args) {

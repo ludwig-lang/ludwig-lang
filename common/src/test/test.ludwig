@@ -65,5 +65,3 @@
     [assert-fail [\[] [r1 `c`]]]
     [assert== r1 [record [, `b` two `a` one exp `fun` [, one two] `list`]]]
 ]]
-
-[get failed-tests]
