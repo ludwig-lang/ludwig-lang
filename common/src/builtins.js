@@ -244,7 +244,7 @@ const builtins = {
         }
         return false
     },
-    concat: (g1, g2) => {
+    merge: (g1, g2) => {
         if (g1.obj instanceof immutable.List && g2.obj instanceof immutable.List) {
             return generator(g1.obj.merge(g2.obj))
         }

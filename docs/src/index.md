@@ -645,15 +645,13 @@ We can also hide the mutable state from direct modification (encapsulate it):
 ```
 [= dog [\[name] [record [,
   `say` [\[] 
-     [print name]
-     [println ` says bark`]
+     [writeln [, name` says bark`]]
   ]
 ]]]]
 
 [= cat [\[name] [record [,
   `say` [\[] 
-     [print name]
-     [println ` says mew`]
+     [writeln [, name` says mew`]]
   ]
 ]]]]
 
@@ -664,10 +662,58 @@ We can also hide the mutable state from direct modification (encapsulate it):
 
 [animals [\[a] [[a `say`]]]]
 ```
+### Multimethods
+```
+[= say [\[animal]
+  [[animal say]]
+]]
+
+[= dog [\[name] [record [,
+  say [\[] 
+     [writeln [, name` says bark`]]
+  ]
+]]]]
+
+[= cat [\[name] [record [,
+  say [\[] 
+     [writeln [, name` says mew`]]
+  ]
+]]]]
+
+[= jack [dog `Jack`]]
+[= kitty [cat `Kitty`]]
+
+[= animals [, jack kitty]]
+
+[animals say]
+```
 ## Inheritance?
 
-## The type system 
+## Type annotations
 
+## Ludwig idioms
+
+### String interpolation
+
+Many modern programming languages like Kotlin or JavaScript provide syntax sugar for *string interpolation* which allows including expressions into string literals.
+For example, in JavaScript you can write
+```javascript
+const apples = 4;
+const bananas = 3;
+console.log(`I have ${apples + bananas} fruits: ${apples} apples and ${bananas} bananas`);
+```
+As was said before, Ludwing contains no syntax sugar, but nonetheless, supports sugar-free string interpolation.
+```
+[= apples [num `4`]]
+[= bananas [num `3`]]
+[println [concat[, `I have `[+ apples bananas]` fruits: `apples` apples and `bananas` bananas`]]]
+```
+or even shorter
+```
+[= apples [num `4`]]
+[= bananas [num `3`]]
+[writeln [, `I have `[+ apples bananas]` fruits: `apples` apples and `bananas` bananas`]]
+```
 ## The standard library
 ### String functions
 `[length s]`
@@ -812,6 +858,10 @@ We can also hide the mutable state from direct modification (encapsulate it):
 `[println x]`
 
 `[prompt question]`
+
+`[write gen]`
+
+`[writeln gen]`
 
 ### Testing
 `[assert condition]`

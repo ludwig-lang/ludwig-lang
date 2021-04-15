@@ -154,6 +154,9 @@ module.exports = `
     
     [js-wrap [js-call [js-unwrap coll] \`sort\` [, c]]]
 ]]
+[= concat [\\[elements] [join \`\` elements]]]
+[= write [\\[elements] [print [concat elements]]]]
+[= writeln [\\[elements] [println [concat elements]]]]
 [= type [\\[] [\\[x] x]]]
 [= Type [type]]
 [= Any [type]]
