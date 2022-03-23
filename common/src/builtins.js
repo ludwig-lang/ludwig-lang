@@ -135,7 +135,9 @@ const builtins = {
 
         const getter = () => x
 
-        return new Record(generator(immutable.List(['get', getter, 'let', setter])))
+        const toString = () => `<${x}>`
+
+        return new Record(generator(immutable.List(['get', getter, 'let', setter, 'to-string', toString])))
     },
     'throw': msg => {
         throw Error(msg)
