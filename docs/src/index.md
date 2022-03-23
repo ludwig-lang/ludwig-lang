@@ -372,7 +372,7 @@ A generator that yields 20 values:
 [= generator [\[consumer]
   [= i [var zero]]
   [= iter [\ []
-    [println [get i]]
+    [consumer [get i]]
     [on [< [++ i] [num `20`]]
       iter
     ]
@@ -777,6 +777,51 @@ or even shorter
 `[+= v delta]`
 
 `[-= v delta]`
+
+#### What is a variable?
+
+A variable is an object that can be passed to the standard functions `get` and `let` which are defined as follows:
+```
+[= get [\[var] [[var `get`]]]]
+[= let [\[var value] [[var `let`] value]]]
+```
+, so instead of calling 
+```
+[let my-var value]
+[get my-var]
+```
+you can call
+```
+[[my-var `let`] value]
+[[my-var `get`]]
+```
+
+As you can see, this means that a variable record must have two fields:
+- `get` containing a no argument function returning variable's value
+- `let` containing a one-argument function, which should set variable's value to the passed value
+
+The built-in `var` function also defines `to-string` function which returns a string representation of the variable.
+
+You can define a custom record type implementing the variable protocol:
+```
+[= checked-var [\[predicate initial]
+    [assert [prdicate initial]]
+    [= inner [var initial]]
+    [record [,
+        `let` [\[value]
+            [assert [predicate value]]
+            [let inner value]
+        ]
+        `get` [inner `get`]
+        `to-string` [inner `to-string`]
+    ]]
+]]
+
+[= positive? [\[x] [> x zero]]]
+[= v [checked-var positive one]]
+[let v two]
+[let v [num `-1`]]
+```
 
 ### Functions on functions
 
