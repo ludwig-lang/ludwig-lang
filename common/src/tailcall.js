@@ -8,7 +8,7 @@ class TailCallable extends FunctionObject {
         this.__tail_call__ = tc
     }
 
-    __call__(args) {
+    __call__(...args) {
         let f = this
         let file = undefined
         let line = undefined

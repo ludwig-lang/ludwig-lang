@@ -4,6 +4,7 @@ const tailcall = require('./tailcall')
 const safety = require('./safety')
 const memoize = require('./memoize')
 const packageJson = require('../package.json')
+const Record = require("./Record");
 
 function number(x) {
     if (typeof x == 'number') {
@@ -48,6 +49,9 @@ const builtins = {
     div: (x, y) => Math.trunc(number(x) / number(y)),
     '~': x => -number(x),
     '<=':  (x, y) => {
+        if (x instanceof Record && y instanceof Record) {
+            return x.__map__.equals(y.__map__)
+        }
         if (typeof x === 'function') {
             if (x === y) {
                 return true
@@ -113,6 +117,7 @@ const builtins = {
     'num?': x => typeof x === 'number',
     'str?': x => typeof x === 'string',
     'fun?': x => typeof x === 'function',
+    'record?': x => (x instanceof Record),
     ',': (...args) => generator(immutable.List(args)),
     print: x => {
         safety.unsafe()
@@ -127,49 +132,15 @@ const builtins = {
             }
             return x = value
         }
-        const result = key => {
-            if (key === builtins.get) {
-                return x
-            }
-            if (key === builtins.let) {
-                return setter
-            }
-            throw Error('Illegal argument')
-        }
-        result.toString = () => `<${x}>`
-        return result
+
+        const getter = () => x
+
+        return new Record(generator(immutable.List(['get', getter, 'let', setter])))
     },
     'throw': msg => {
         throw Error(msg)
     },
-    record: gen => {
-        let m = immutable.Map()
-        let isKey = true
-        let key
-        gen(x => {
-            if (isKey) {
-                key = x
-                if (key.obj) {
-                    key = key.obj
-                }
-            } else {
-                m = m.set(key, x)
-            }
-            isKey = !isKey
-        })
-        const fun = key => {
-            if (key.obj) {
-                key = key.obj
-            }
-            const value = m.get(key)
-            if (!value && !m.has(key)) {
-                throw Error('Unknown key')
-            }
-            return value
-        }
-        fun.obj = m
-        return fun
-    },
+    record: gen => new Record(gen),
     'hash-map': gen => {
         const get = builtins.record(gen)
         const keys = generator(immutable.Set(get.obj.keySeq()))

@@ -8,7 +8,7 @@ class Memoized extends FunctionObject {
         this.__cache__ = immutable.Map()
     }
 
-    __call__(args) {
+    __call__(...args) {
         const key = immutable.List(args)
         const cached = this.__cache__.get(key)
         if (cached) {
